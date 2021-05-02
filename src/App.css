@@ -557,7 +557,7 @@ footer .nav-link {
   margin: auto;
 }
 /* Responsive CSS */
-@media only screen and (max-width: 1240px) {
+@media only screen and (max-width: 1280px) {
   .full-height {
     min-height: 600px !important;
   }
