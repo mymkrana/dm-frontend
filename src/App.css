@@ -557,6 +557,14 @@ footer .nav-link {
   margin: auto;
 }
 /* Responsive CSS */
+@media only screen and (max-width: 1240px) {
+  .full-height {
+    min-height: 600px !important;
+  }
+  .parallax::after {
+    transform: translateZ(-0.5px) scale(1.6);
+  }
+}
 @media only screen and (max-width: 1024px) {
   .sabsolute h3 {
     font-size: 62px !important;
