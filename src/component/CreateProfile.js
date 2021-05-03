@@ -3,17 +3,75 @@ import { Link } from 'react-router-dom';
 import { Form, Row, Col, Nav } from 'react-bootstrap'
 import '../css/profile.css'
 import logo from '../images/logo-dark.png'
+import { getCategories } from '../services/getCategories';
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {catArr: [], Scat: [], SubCat: [], SubSelected: []};
+    }
+    componentDidMount() {  
+        getCategories()
+            .then(async (res) => {
+                await this.setState({ categories: res })
+                var catArr = []
+                for (let cat in res) {
+                    catArr.push(cat)
+                }
+                this.setState({ catArr: catArr })
+            })
+    }
+    handleCheck = async (e) => {
+        if(!this.state.Scat.includes(e.target.name)) {
+            var Scat = [...this.state.Scat]
+            Scat.push(e.target.name)
+            await this.setState({Scat: Scat})
+            var SubCat = []
+            this.state.Scat.map((cat) => {
+                this.state.categories[cat].map((subcat) => {
+                    SubCat.push(subcat)
+                    return subcat
+                })
+                return cat
+            })
+            await this.setState({SubCat: SubCat})
+        }
+        else {
+            var Srcat = [...this.state.Scat]
+            var rmindex = Srcat.findIndex((item) => (item === e.target.name))
+            Srcat.splice(rmindex, 1)
+            await this.setState({Scat: Srcat})
+            var eSubCat = []
+            this.state.Scat.map((cat) => {
+                this.state.categories[cat].map((subcat) => {
+                    eSubCat.push(subcat)
+                    return subcat
+                })
+                return cat
+            })
+            await this.setState({SubCat: eSubCat})
+        }
+    }
+    handleSubCat = async (e) => {
+        if(e.target.checked) {
+            const Subselected = this.state.SubSelected
+            Subselected.push(e.target.name)
+            await this.setState({Subselected: Subselected})
+            console.log(this.state.Subselected)
+        }
+        else {
+            const Subselected = this.state.SubSelected
+            var rindex = Subselected.findIndex((item) => {return item === e.target.name})
+            Subselected.splice(rindex, 1)
+            await this.setState({Subselected: Subselected})
+            console.log(this.state.Subselected)
+        }
     }
     render() {
         // if(!this.props.location.state) {
         //     return(<Redirect to='/register' />)
         // }
         var fullname = 'SahilDesigns'
-        if(this.props.location.state) {
+        if (this.props.location.state) {
             fullname = this.props.location.state.fullname;
         }
         return (
@@ -23,7 +81,7 @@ class CreateProfile extends React.Component {
                         <div className="col-sm-3 paside order-sm-12">
                             <div className="usr-profile pt-5 pb-2">
                                 <div className='avatar'>
-                                <span className='davatar'>{fullname[0]}</span>
+                                    <span className='davatar'>{fullname[0]}</span>
                                 </div>
                                 <p className="font-roboto text-center mb-0 weight-600">Add an avatar</p>
                                 <div className='ch-image'>
@@ -64,7 +122,7 @@ class CreateProfile extends React.Component {
                             <div className="tab-content container">
                                 <div id="pbasic" className="container tab-pane active"><br />
                                     <div>
-                                        <h3 className="weight-600">Welcome, {(fullname !=='') ? fullname : ''}<br />Let's create your profile..</h3>
+                                        <h3 className="weight-600">Welcome, {(fullname !== '') ? fullname : ''}<br />Let's create your profile..</h3>
                                         <p>Let other get to know you better!</p>
                                         <div className="form-1">
                                             <Form>
@@ -188,18 +246,14 @@ class CreateProfile extends React.Component {
                                             <h5 className='mt-3 mb-0'>What Categories do you design for</h5>
                                             <span>You can select more than one category also</span>
                                             <Row className='mt-2'>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Branding Design" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Fashion Design" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Artistic Design" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Digital Design" />
-                                                </Col>
+                                                {this.state.catArr.map((cat) => {
+                                                    return(<Col sm={3} key={cat}>
+                                                        <div className="form-check">
+                                                        <input type="checkbox" className="form-check-input" id={cat.split(" ")[0]} name={cat} onChange={this.handleCheck}/>
+                                                        <label htmlFor={cat.split(" ")[0]} className='form-label'>{cat}</label>
+                                                        </div>
+                                                    </Col>)
+                                                })}
                                             </Row>
                                             <Row>
                                                 <Col>
@@ -209,44 +263,14 @@ class CreateProfile extends React.Component {
                                             <h5 className='mt-3 mb-0'>Select the sub-categories you wish to offer your services in</h5>
                                             <span>You can select more than one category also</span>
                                             <Row className='mt-2'>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Motion Logo" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Motion Creatives" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Animation Video" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Video Design" />
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Visual Content" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="UI/UX" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="VXF" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="3D" />
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Copy Writer" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Image/Video Editor" />
-                                                </Col>
-                                                <Col sm={3}>
-                                                    <Form.Check type="checkbox" label="Website developer" />
-                                                </Col>
-                                                <Col></Col>
+                                            {this.state.SubCat.map((cat) => {
+                                                    return(<Col sm={3} key={cat}>
+                                                        <div className="form-check">
+                                                        <input type="checkbox" className="form-check-input" key={cat} id={cat.split(" ")[0]} name={cat} onChange={this.handleSubCat}/>
+                                                        <label htmlFor={cat.split(" ")[0]} className='form-label'>{cat}</label>
+                                                        </div>
+                                                    </Col>)
+                                                })}
                                             </Row>
                                             <hr className="chr"></hr>
                                             <h5>Online Presence</h5>

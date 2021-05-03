@@ -3,6 +3,7 @@ import { Nav } from 'react-bootstrap';
 import '../css/login.css'
 import { Link, Redirect } from 'react-router-dom'
 import { LoginMe } from '../services/LoginMe';
+import axios from 'axios';
 // import loader from '../images/loader.gif'
 class Login extends React.Component {
     constructor(props) {
@@ -13,7 +14,6 @@ class Login extends React.Component {
     }
     handleChange = async (e) => {
         await this.setState({ [e.target.name]: e.target.value })
-        console.log("current data", this.state)
         this.setState({ successMessage: "" })
     }
     formSubmit = (e) => {
@@ -24,12 +24,22 @@ class Login extends React.Component {
             email: this.state.email
         }
         LoginMe(data).then((res) => {
-            console.log("sucess", res)
             this.setState({ isloading: false })
             if (res.status === 200) {
-                this.setState({ successMessage: "Login Successful", isloggedin: true })
+                console.log(res.data.token)
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'HTTPBearer': res.data.token
+                  }
+                axios.get("https://designmocha-dev.el.r.appspot.com/session/login/", {headers: headers})
+                .then((response) => {
+                    this.setState({ successMessage: "Login Successful", isloggedin: true })
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.setState({ successMessage: "Something went wrong" })
+                })
             }
-
         }).catch((err) => {
             if (err.response) {
                 if (err.response.data.general) {
@@ -46,7 +56,6 @@ class Login extends React.Component {
     }
     render() {
         if (this.state.isloggedin) {
-            console.log("success")
             return <Redirect to='/' />
         }
         return (

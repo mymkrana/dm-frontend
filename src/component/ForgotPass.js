@@ -62,7 +62,6 @@ class ForgotPass extends React.Component {
                                         </div>
                                         <button type="submit" class="btn form" disabled={this.state.isloading}>Forgot Password</button>
                                         <Link to="/login" class="btn form a">Login</Link>
-
                                     </form>
                                     <span class="flow"> or connect with -
                                         <Nav.Link to="/"><i class="cl fa fa-facebook" aria-hidden="true"></i></Nav.Link>

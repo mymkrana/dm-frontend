@@ -132,7 +132,7 @@
 .tab-pane {
     margin-bottom: 60px;
 }
-.form-control:focus {
+.cprofile .form-control:focus {
     color: #878787 !important;
     border-color: #BD5828;
     box-shadow: 0 0 0 0.2rem #bd57286b;
