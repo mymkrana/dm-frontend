@@ -17,11 +17,9 @@
         "react-cookie": "^4.0.3",
         "react-dom": "^17.0.2",
         "react-fontawesome": "^1.7.1",
-        "react-fullpage": "^0.1.16",
         "react-owl-carousel": "^2.3.3",
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.3",
-        "react-ui-avatars": "^3.0.2",
         "web-vitals": "^1.0.1"
     },
     "scripts": {

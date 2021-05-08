@@ -4,8 +4,13 @@ import '../css/login.css'
 import { Link } from 'react-router-dom'
 import { LoginMe } from '../services/LoginMe';
 import { getSession } from '../services/getSession'
+import { instanceOf } from 'prop-types';
+import {withCookies, Cookies } from 'react-cookie';
 // import loader from '../images/loader.gif'
 class Login extends React.Component {
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+      };
     constructor(props) {
         super(props);
         this.state = {
@@ -33,6 +38,8 @@ class Login extends React.Component {
                 getSession(headers)
                 .then((response) => {
                     console.log(response.data)
+                    const {cookies} = this.props
+                    cookies.set("session", response.data.session, { path: '/' })
                     this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
                 })
                 .catch((err) => {
@@ -91,12 +98,10 @@ class Login extends React.Component {
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
             </div>
         );
     }
 }
-export default Login;
+export default withCookies(Login);

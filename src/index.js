@@ -6,10 +6,11 @@ import './index.css';
 import 'popper.js/dist/popper.js'
 import reportWebVitals from './reportWebVitals';
 import { Routes } from './routes/Routes';
+import { CookiesProvider } from 'react-cookie';
 ReactDOM.render(
-  <React.StrictMode>
+  <CookiesProvider>
     <Routes />
-  </React.StrictMode>,
+  </CookiesProvider>,
   document.getElementById('root')
 );
 reportWebVitals();
