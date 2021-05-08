@@ -32,7 +32,7 @@ class Login extends React.Component {
                   }
                 getSession(headers)
                 .then((response) => {
-                    console.log(response.headers)
+                    console.log(response.data)
                     this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
                 })
                 .catch((err) => {
