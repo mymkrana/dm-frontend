@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Row, Col, Nav } from 'react-bootstrap'
+import { Form, Row, Col, Nav, Button, Modal } from 'react-bootstrap'
 import '../css/profile.css'
 import logo from '../images/logo-dark.png'
 import { getCategories } from '../services/getCategories';
@@ -8,11 +8,11 @@ import csc from 'country-state-city'
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: []};
+        this.state = {show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [] };
     }
-    async componentDidMount() {  
+    async componentDidMount() {
         var countries = csc.getAllCountries()
-        await this.setState({countries: countries})
+        await this.setState({ countries: countries })
         getCategories()
             .then(async (res) => {
                 await this.setState({ categories: res })
@@ -23,11 +23,17 @@ class CreateProfile extends React.Component {
                 this.setState({ catArr: catArr })
             })
     }
+    handleShow = () => {
+        this.setState({show:true})
+    }
+    handleClose = () => {
+        this.setState({show:false})
+    }
     handleCheck = async (e) => {
-        if(!this.state.Scat.includes(e.target.name)) {
+        if (!this.state.Scat.includes(e.target.name)) {
             var Scat = [...this.state.Scat]
             Scat.push(e.target.name)
-            await this.setState({Scat: Scat})
+            await this.setState({ Scat: Scat })
             var SubCat = []
             this.state.Scat.map((cat) => {
                 this.state.categories[cat].map((subcat) => {
@@ -36,13 +42,13 @@ class CreateProfile extends React.Component {
                 })
                 return cat
             })
-            await this.setState({SubCat: SubCat})
+            await this.setState({ SubCat: SubCat })
         }
         else {
             var Srcat = [...this.state.Scat]
             var rmindex = Srcat.findIndex((item) => (item === e.target.name))
             Srcat.splice(rmindex, 1)
-            await this.setState({Scat: Srcat})
+            await this.setState({ Scat: Srcat })
             var eSubCat = []
             this.state.Scat.map((cat) => {
                 this.state.categories[cat].map((subcat) => {
@@ -51,36 +57,36 @@ class CreateProfile extends React.Component {
                 })
                 return cat
             })
-            await this.setState({SubCat: eSubCat})
+            await this.setState({ SubCat: eSubCat })
         }
     }
     handleSubCat = async (e) => {
-        if(e.target.checked) {
+        if (e.target.checked) {
             const Subselected = this.state.SubSelected
             Subselected.push(e.target.name)
-            await this.setState({Subselected: Subselected})
+            await this.setState({ Subselected: Subselected })
             console.log(this.state.Subselected)
         }
         else {
             const Subselected = this.state.SubSelected
-            var rindex = Subselected.findIndex((item) => {return item === e.target.name})
+            var rindex = Subselected.findIndex((item) => { return item === e.target.name })
             Subselected.splice(rindex, 1)
-            await this.setState({Subselected: Subselected})
+            await this.setState({ Subselected: Subselected })
             console.log(this.state.Subselected)
         }
     }
     countrySelect = async (e) => {
-       var states = await csc.getStatesOfCountry(e.target.selectedOptions[0].getAttribute('data-iso'))
-       console.log(states)
-       await this.setState({states: states})
+        var states = await csc.getStatesOfCountry(e.target.selectedOptions[0].getAttribute('data-iso'))
+        console.log(states)
+        await this.setState({ states: states })
     }
     render() {
         // if(!this.props.location.state) {
         //     return(<Redirect to='/register' />)
         // }
-        var fullname = 'SahilDesigns'
+        var username = 'SahilDesigns'
         if (this.props.location.state) {
-            fullname = this.props.location.state.fullname;
+            username = this.props.location.state.username;
         }
         return (
             <div className="cprofile">
@@ -89,13 +95,12 @@ class CreateProfile extends React.Component {
                         <div className="col-sm-3 paside order-sm-12">
                             <div className="usr-profile pt-5 pb-2">
                                 <div className='avatar'>
-                                    <span className='davatar'>{fullname[0]}</span>
+                                    <span className='davatar'>{username[0]}</span>
                                 </div>
                                 <p className="font-roboto text-center mb-0 weight-600">Add an avatar</p>
                                 <div className='ch-image'>
-                                    <button className='btn btn-av font-roboto'>Choose image</button>
+                                    <button className='btn btn-av font-roboto' onClick={this.handleShow}>Choose image</button>
                                 </div>
-                                <p className='text-center font-roboto mt-2 text-14'>&gt;or choose one of our defaults</p>
                             </div>
                             <hr className='hr-white' />
                             <div className='ctoggle'>
@@ -122,6 +127,12 @@ class CreateProfile extends React.Component {
                                 </ul>
                             </div>
                             <Link className="text-color lgout">Logout</Link>
+                            <Modal show={this.state.show} onHide={this.handleClose} centered>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Upload Image</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                            </Modal>
                         </div>
                         <div className="col-sm-9 order-sm-1">
                             <div className="clogo">
@@ -130,7 +141,7 @@ class CreateProfile extends React.Component {
                             <div className="tab-content container">
                                 <div id="pbasic" className="container tab-pane active"><br />
                                     <div>
-                                        <h3 className="weight-600">Welcome, {(fullname !== '') ? fullname : ''}<br />Let's create your profile..</h3>
+                                        <h3 className="weight-600">Welcome, {(username !== '') ? username : ''}<br />Let's create your profile..</h3>
                                         <p>Let other get to know you better!</p>
                                         <div className="form-1">
                                             <Form>
@@ -168,7 +179,7 @@ class CreateProfile extends React.Component {
                                                         <Form.Control as="select" name="country" defaultValue="select" onChange={this.countrySelect}>
                                                             <option>Select Country</option>
                                                             {this.state.countries.map((country) => {
-                                                                return(<option data-iso={country.isoCode} value={country.name}>{country.name}</option>)
+                                                                return (<option data-iso={country.isoCode} value={country.name}>{country.name}</option>)
                                                             })}
                                                         </Form.Control>
                                                     </Col>
@@ -183,7 +194,7 @@ class CreateProfile extends React.Component {
                                                         <Form.Control as="select" defaultValue="select">
                                                             <option>Select State</option>
                                                             {this.state.states.map((state) => {
-                                                                return(<option value={state.stateCode}>{state.name}</option>)
+                                                                return (<option value={state.stateCode}>{state.name}</option>)
                                                             })}
                                                         </Form.Control>
                                                     </Col>
@@ -259,10 +270,10 @@ class CreateProfile extends React.Component {
                                             <span>You can select more than one category also</span>
                                             <Row className='mt-2'>
                                                 {this.state.catArr.map((cat) => {
-                                                    return(<Col sm={3} key={cat}>
+                                                    return (<Col sm={3} key={cat}>
                                                         <div className="form-check">
-                                                        <input type="checkbox" className="form-check-input" id={cat.split(" ")[0]} name={cat} onChange={this.handleCheck}/>
-                                                        <label htmlFor={cat.split(" ")[0]} className='form-label'>{cat}</label>
+                                                            <input type="checkbox" className="form-check-input" id={cat.split(" ")[0]} name={cat} onChange={this.handleCheck} />
+                                                            <label htmlFor={cat.split(" ")[0]} className='form-label'>{cat}</label>
                                                         </div>
                                                     </Col>)
                                                 })}
@@ -275,11 +286,11 @@ class CreateProfile extends React.Component {
                                             <h5 className='mt-3 mb-0'>Select the sub-categories you wish to offer your services in</h5>
                                             <span>You can select more than one category also</span>
                                             <Row className='mt-2'>
-                                            {this.state.SubCat.map((cat) => {
-                                                    return(<Col sm={3} key={cat}>
+                                                {this.state.SubCat.map((cat) => {
+                                                    return (<Col sm={3} key={cat}>
                                                         <div className="form-check">
-                                                        <input type="checkbox" className="form-check-input" key={cat} id={cat.split(" ")[0]} name={cat} onChange={this.handleSubCat}/>
-                                                        <label htmlFor={cat.split(" ")[0]} className='form-label'>{cat}</label>
+                                                            <input type="checkbox" className="form-check-input" key={cat} id={cat.split(" ")[0]} name={cat} onChange={this.handleSubCat} />
+                                                            <label htmlFor={cat.split(" ")[0]} className='form-label'>{cat}</label>
                                                         </div>
                                                     </Col>)
                                                 })}

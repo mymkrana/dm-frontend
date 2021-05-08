@@ -164,7 +164,7 @@ a.nav-link.active::before {
 .cprofile h3 {
     color: #3A383A;
 }
-.cprofile h3, .cprofile p, .cprofile span, .cprofile h5, .cprofile input, .cprofile .form-control, .cprofile a, .cprofile label, .cprofile button, .cprofile b, .cprofile option{
+.cprofile h3, .cprofile p, .cprofile span, .cprofile h5, .cprofile input, .cprofile .form-control, .cprofile a, .cprofile label, .cprofile button, .cprofile b, .cprofile option, .cprofile div{
     font-family: Arial, Helvetica, sans-serif !important;
 }
 @media only screen and (min-width:768px){
