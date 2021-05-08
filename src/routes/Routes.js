@@ -36,31 +36,3 @@ export const Routes = () => {
         </div>
     )
 }
-
-
-
-
-
-// import React from 'react';
-// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-// class Routes extends React.Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {};
-//     }
-
-//     render() {
-//         return (
-//             <div className="wrapper">
-//                 <Router>
-
-//                 </Router>
-//             </div>
-
-//         );
-//     }
-// }
-
-// Routes.propTypes = {};
-
-// export default Routes;

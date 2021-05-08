@@ -4,12 +4,16 @@ import { Form, Row, Col, Nav } from 'react-bootstrap'
 import '../css/profile.css'
 import logo from '../images/logo-dark.png'
 import { getCategories } from '../services/getCategories';
+import csc from 'country-state-city'
+import Pincode from "react-pincode";
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {catArr: [], Scat: [], SubCat: [], SubSelected: []};
+        this.state = {catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: []};
     }
-    componentDidMount() {  
+    async componentDidMount() {  
+        var countries = csc.getAllCountries()
+        await this.setState({countries: countries})
         getCategories()
             .then(async (res) => {
                 await this.setState({ categories: res })
@@ -65,6 +69,11 @@ class CreateProfile extends React.Component {
             await this.setState({Subselected: Subselected})
             console.log(this.state.Subselected)
         }
+    }
+    countrySelect = async (e) => {
+       var states = await csc.getStatesOfCountry(e.target.selectedOptions[0].getAttribute('data-iso'))
+       console.log(states)
+       await this.setState({states: states})
     }
     render() {
         // if(!this.props.location.state) {
@@ -157,9 +166,11 @@ class CreateProfile extends React.Component {
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>Country</Form.Label>
-                                                        <Form.Control as="select" defaultValue="select">
+                                                        <Form.Control as="select" name="country" defaultValue="select" onChange={this.countrySelect}>
                                                             <option>Select Country</option>
-                                                            <option>...</option>
+                                                            {this.state.countries.map((country) => {
+                                                                return(<option data-iso={country.isoCode} value={country.name}>{country.name}</option>)
+                                                            })}
                                                         </Form.Control>
                                                     </Col>
                                                 </Row>
@@ -172,7 +183,9 @@ class CreateProfile extends React.Component {
                                                         <Form.Label>State</Form.Label>
                                                         <Form.Control as="select" defaultValue="select">
                                                             <option>Select State</option>
-                                                            <option>...</option>
+                                                            {this.state.states.map((state) => {
+                                                                return(<option value={state.stateCode}>{state.name}</option>)
+                                                            })}
                                                         </Form.Control>
                                                     </Col>
                                                 </Row>

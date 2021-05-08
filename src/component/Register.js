@@ -74,13 +74,12 @@ class Register extends React.Component {
     }
     render() {
         if (this.state.registered) {
-            console.log("success")
             return <Redirect
-                to={{
-                    pathname: "/create-profile",
-                    state: { fullname: this.state.username }
-                }}
-            />
+            to={{
+                pathname: "/create-profile",
+                state: { username: this.state.username }
+            }}
+        />
         }
         return (
             <div>
@@ -101,11 +100,11 @@ class Register extends React.Component {
                                         {!this.state.isloading ? '' : (<p className="text-color">Loading please wait..</p>)}
                                         <div className="form-group">
                                             <label for="exampleInputEmail1" className="fotmlab">USERNAME</label>
-                                            <input type="text" name="username" className="form-control" id="exampleInputEmail1" aria-describedby="FullName" placeholder="SahilDesigns" required onChange={this.handleChange} />
+                                            <input type="text" name="username" className="form-control" id="exampleInputEmail1" aria-describedby="FullName" placeholder="JohnDesigns" required onChange={this.handleChange} />
                                         </div>
                                         <div className="form-group">
                                             <label for="exampleInputEmail1" className="fotmlab"> EMAIL ADDRESS</label>
-                                            <input type="email" name="email" className="form-control" id="exampleInputEmail1" aria-describedby="Email" placeholder="Sahil@breathingcrafts.com" required onChange={this.handleChange} />
+                                            <input type="email" name="email" className="form-control" id="exampleInputEmail1" aria-describedby="Email" placeholder="jdoe123@gmail.com" required onChange={this.handleChange} />
                                         </div>
                                         <div className="form-group">
                                             <label for="exampleInputPassword1" className="fotmlab">PASSWORD</label>
