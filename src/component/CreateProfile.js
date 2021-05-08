@@ -5,7 +5,6 @@ import '../css/profile.css'
 import logo from '../images/logo-dark.png'
 import { getCategories } from '../services/getCategories';
 import csc from 'country-state-city'
-// import Pincode from "react-pincode";
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);

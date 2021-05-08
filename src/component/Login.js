@@ -1,7 +1,7 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
 import '../css/login.css'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { LoginMe } from '../services/LoginMe';
 import { getSession } from '../services/getSession'
 // import loader from '../images/loader.gif'

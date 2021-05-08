@@ -10,9 +10,16 @@ class HomePage extends React.Component {
         super(props);
         this.state = {};
     }
+    componentDidMount() {
+        const script = document.createElement("script");
+        script.src = "/scripts/home.js";
+        script.async = true;
+        document.body.appendChild(script);
+    }
     render() {
         return (
             <div className="page-container">
+                <script src='../'></script>
                 <section className="main-section">
                     <div>
                         <div className='item slide-1'>
@@ -21,6 +28,7 @@ class HomePage extends React.Component {
                                 <source src={SliderVideo} type="video/ogg" />
                             </video>
                             <div className="sabsolute">
+                            <div id="div1" class="cursor"></div>
                                 <div className="container">
                                     <div className="slide-header">
                                         <h3 className="text-color text-center">Our vision is to be India`s biggest design crowdsourcing platform..</h3>
