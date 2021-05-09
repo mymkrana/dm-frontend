@@ -5,12 +5,19 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import sdown from '../images/sdown.png'
 import SliderVideo from '../images/slider-video.mp4'
 import { Link } from 'react-router-dom';
+import { ProfileOne } from '../services/ProfileOne';
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
     componentDidMount() {
+        ProfileOne().then((res) => {
+            console.log("profile", res)
+        })
+        .catch((err) => {
+            console.log(err.response)
+        })
         const script = document.createElement("script");
         script.src = "/scripts/home.js";
         script.async = true;
