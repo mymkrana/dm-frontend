@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav } from 'react-bootstrap';
+// import { Nav } from 'react-bootstrap';
 import '../css/login.css'
 import { Link } from 'react-router-dom'
 import { LoginMe } from '../services/LoginMe';
@@ -39,7 +39,9 @@ class Login extends React.Component {
                 .then((response) => {
                     console.log(response.data)
                     const {cookies} = this.props
-                    cookies.set("session", response.data.session, { path: '/' , maxAge: 3600 })
+                    cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none"})
+                    // cookies.set("authenticated", response.data.authenticated, { maxAge: 3600 })
+                    // cookies.set("userProfile", response.data.userProfile, { maxAge: 3600, sameSite:"none" })
                     this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
                 })
                 .catch((err) => {
@@ -89,12 +91,12 @@ class Login extends React.Component {
                                         <Link to="/register" className="btn form a">If you haven't member </Link>
                                         <Link to='reset-password' className='d-block text-color mt-4'>Forgot password ?</Link>
                                     </form>
-                                    <span className="flow"> or connect with -
+                                    {/* <span className="flow"> or connect with -
                                         <Nav.Link to="/"><i className="cl fa fa-facebook" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link to="/"><i className="cl fa fa-instagram" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link to="/"><i className="cl fa fa-twitter" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link to="/"><i className="cl fa fa-pinterest-p" aria-hidden="true"></i></Nav.Link>
-                                    </span>
+                                    </span> */}
                                 </div>
                             </div>
                         </div>

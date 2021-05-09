@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, Form, Modal, Button } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { Link, Redirect } from 'react-router-dom';
 import '../css/register.css'
 import { RegisterMe } from '../services/RegisterMe';
@@ -127,12 +127,12 @@ class Register extends React.Component {
                                         <button type="submit" className="btn form" disabled={this.state.isloading}>SIGN ME UP</button>
                                         <Link to="/login" className="btn form a">I am already a member</Link>
                                     </form>
-                                    <span className="flow"> or connect with -
+                                    {/* <span className="flow"> or connect with -
                                         <Nav.Link href="/"><i className="cl fa fa-facebook" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link href="/"><i className="cl fa fa-instagram" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link href="/"><i className="cl fa fa-twitter" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link href="/"><i className="cl fa fa-pinterest-p" aria-hidden="true"></i></Nav.Link>
-                                    </span>
+                                    </span> */}
                                 </div>
                             </div>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createRef} from 'react';
 import '../App.css';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
@@ -6,22 +6,32 @@ import sdown from '../images/sdown.png'
 import SliderVideo from '../images/slider-video.mp4'
 import { Link } from 'react-router-dom';
 import { ProfileOne } from '../services/ProfileOne';
+import '../big-counter.css'
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.scriptTagRef = createRef();
     }
     componentDidMount() {
         ProfileOne().then((res) => {
             console.log("profile", res)
         })
         .catch((err) => {
-            console.log(err.response)
+            console.log(err)
         })
         const script = document.createElement("script");
         script.src = "/scripts/home.js";
         script.async = true;
         document.body.appendChild(script);
+        const pscript = document.createElement("script");
+        pscript.src = "/scripts/pace.min.js";
+        pscript.async = true;
+        document.body.appendChild(pscript);
+        this.scriptTagRef.current = pscript;
+    }
+    componentWillUnmount() {
+        document.body.removeChild(this.scriptTagRef.current);
     }
     render() {
         return (

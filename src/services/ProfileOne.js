@@ -1,4 +1,5 @@
 import axios from "axios"
+var Cookies = require('js-cookie')
 export const ProfileOne = (user) => {
     return new Promise((resolve, reject) => {
         var data = {
@@ -9,12 +10,22 @@ export const ProfileOne = (user) => {
             profile_name: "jogn doe",
             mobile_number: "8787878787"
         }
-        axios.post("https://designmocha-dev.el.r.appspot.com/public/profile/", data, { withCredentials: true })
-            .then((res) => {
-                resolve(res)
-            })
-            .catch((error) => {
-                reject(error)
-            })
+        axios.defaults.withCredentials = true;
+        const baseURL = "https://designmocha-dev.el.r.appspot.com/public/"
+        const app = axios.create({
+            baseURL,
+            withCredentials: true
+        })
+        console.log("session", Cookies.get("session"))
+        app.post('profile', data)
+            .then(res => console.log(res))
+            .catch(err => console.log("error", err))
+        // axios.post("https://designmocha-dev.el.r.appspot.com/public/profile/", data, { withCredentials: true })
+        //     .then((res) => {
+        //         resolve(res)
+        //     })
+        //     .catch((error) => {
+        //         reject(error)
+        //     })
     })
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav } from 'react-bootstrap';
+// import { Nav } from 'react-bootstrap';
 import '../css/login.css'
 import { Link } from 'react-router-dom'
 import { ResetPass } from '../services/ResetPass';
@@ -18,7 +18,7 @@ class ForgotPass extends React.Component {
         e.preventDefault();
         await this.setState({ isloading: true, successMessage: "" })
         var data = {
-            username: this.state.username
+            email: this.state.email
         }
         ResetPass(data).then((res) => {
             this.setState({ isloading: false })
@@ -57,18 +57,18 @@ class ForgotPass extends React.Component {
                                         {!this.state.successMessage ? '' : (<p className="text-color">{this.state.successMessage}</p>)}
                                         {!this.state.isloading ? '' : (<p className="text-color">Loading please wait..</p>)}
                                         <div class="form-group mb-5">
-                                            <label for="exampleInputEmail1" class="fotmlab">USERNAME</label>
-                                            <input type="text" name='username' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your username" onChange={this.handleChange} required />
+                                            <label htmlFor="exampleInputEmail1" class="fotmlab">Email</label>
+                                            <input type="email" name='email' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email" onChange={this.handleChange} required />
                                         </div>
                                         <button type="submit" class="btn form" disabled={this.state.isloading}>Forgot Password</button>
                                         <Link to="/login" class="btn form a">Login</Link>
                                     </form>
-                                    <span class="flow"> or connect with -
+                                    {/* <span class="flow"> or connect with -
                                         <Nav.Link to="/"><i class="cl fa fa-facebook" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link to="/"><i class="cl fa fa-instagram" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link to="/"><i class="cl fa fa-twitter" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link to="/"><i class="cl fa fa-pinterest-p" aria-hidden="true"></i></Nav.Link>
-                                    </span>
+                                    </span> */}
                                 </div>
                             </div>
                         </div>
