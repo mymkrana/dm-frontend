@@ -31,5 +31,4 @@ $(document).ready(function () {
       e.target.setCustomValidity("");
     };
   }
-  // $("#background-video").get(0).play()
 })

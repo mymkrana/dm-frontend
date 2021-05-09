@@ -18,14 +18,13 @@ class HomePage extends React.Component {
     }
     render() {
         return (
-            <div className="page-container">
+            <div className="page-container" id="page">
                 <script src='../'></script>
                 <section className="main-section">
                     <div>
                         <div className='item slide-1'>
-                            <video id="background-video" loop autoPlay>
+                            <video id="background-video" loop muted autoplay>
                                 <source src={SliderVideo} type="video/mp4" />
-                                <source src={SliderVideo} type="video/ogg" />
                             </video>
                             <div className="sabsolute">
                             <div id="div1" class="cursor"></div>

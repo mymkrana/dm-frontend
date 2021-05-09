@@ -1,16 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Row, Col, Nav, Button, Modal } from 'react-bootstrap'
+import { Form, Row, Col, Nav, Modal } from 'react-bootstrap'
 import '../css/profile.css'
 import logo from '../images/logo-dark.png'
 import { getCategories } from '../services/getCategories';
 import csc from 'country-state-city'
+import { getAvatars } from '../services/getAvatars';
+import { uploadAvatar } from '../services/uploadAvatar';
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [] };
+        this.state = { show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false };
     }
     async componentDidMount() {
+        var cavatars = await getAvatars()
+        cavatars.shift()
+        await this.setState({ avatars: cavatars })
         var countries = csc.getAllCountries()
         await this.setState({ countries: countries })
         getCategories()
@@ -23,11 +28,28 @@ class CreateProfile extends React.Component {
                 this.setState({ catArr: catArr })
             })
     }
+    selectFile = (e) => {
+        var fileExt = e.target.files[0].name.split(".")
+        if((fileExt[fileExt.length-1].toLowerCase() === "png") || (fileExt[fileExt.length-1].toLowerCase() === "jpeg") || (fileExt[fileExt.length-1].toLowerCase() === "jpg")) {
+            this.setState({fileName: e.target.files[0].name})
+            uploadAvatar(e.target.files[0]).then((res) => {
+                console.log("file uploaded")
+                this.setState({isAvatar: true, profileImg: "https://storage.googleapis.com/designmocha-dev.appspot.com/avatarImages/" + this.state.fileName})
+            })
+            .catch((err) => {
+                console.log(err)
+                this.setState({fileName: err.response})
+            })
+        }
+        else {
+            this.setState({fileName: "select .png or .jpg file"})
+        }
+    }
     handleShow = () => {
-        this.setState({show:true})
+        this.setState({ show: true })
     }
     handleClose = () => {
-        this.setState({show:false})
+        this.setState({ show: false })
     }
     handleCheck = async (e) => {
         if (!this.state.Scat.includes(e.target.name)) {
@@ -65,19 +87,17 @@ class CreateProfile extends React.Component {
             const Subselected = this.state.SubSelected
             Subselected.push(e.target.name)
             await this.setState({ Subselected: Subselected })
-            console.log(this.state.Subselected)
+
         }
         else {
             const Subselected = this.state.SubSelected
             var rindex = Subselected.findIndex((item) => { return item === e.target.name })
             Subselected.splice(rindex, 1)
             await this.setState({ Subselected: Subselected })
-            console.log(this.state.Subselected)
         }
     }
     countrySelect = async (e) => {
         var states = await csc.getStatesOfCountry(e.target.selectedOptions[0].getAttribute('data-iso'))
-        console.log(states)
         await this.setState({ states: states })
     }
     render() {
@@ -94,12 +114,13 @@ class CreateProfile extends React.Component {
                     <div className='row frow'>
                         <div className="col-sm-3 paside order-sm-12">
                             <div className="usr-profile pt-5 pb-2">
-                                <div className='avatar'>
-                                    <span className='davatar'>{username[0]}</span>
+                                <div className='avatar mb-2'>
+                                    <span className='davatar' style={{display: !this.state.isAvatar ? "flex" : "none"}}>{username[0]}</span>
+                                    <img src={this.state.profileImg} alt='profile' style={{display: this.state.isAvatar ? "block" : "none"}} className="rounded-circle" />
                                 </div>
                                 <p className="font-roboto text-center mb-0 weight-600">Add an avatar</p>
                                 <div className='ch-image'>
-                                    <button className='btn btn-av font-roboto' onClick={this.handleShow}>Choose image</button>
+                                    <button className='btn btn-av font-roboto mb-2' onClick={this.handleShow}>Choose image</button>
                                 </div>
                             </div>
                             <hr className='hr-white' />
@@ -127,11 +148,31 @@ class CreateProfile extends React.Component {
                                 </ul>
                             </div>
                             <Link className="text-color lgout">Logout</Link>
-                            <Modal show={this.state.show} onHide={this.handleClose} centered>
+                            <Modal show={this.state.show} onHide={this.handleClose} centered size="lg" className="cmodal">
                                 <Modal.Header closeButton>
-                                    <Modal.Title>Upload Image</Modal.Title>
+                                    <Modal.Title className="cmtitle text-center w-100"></Modal.Title>
                                 </Modal.Header>
-                                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                                <Modal.Body>
+                                    <div className="select-av">
+                                        <h3 class="text-center">Select from default avatars</h3>
+                                        <div className="default-av">
+                                            {
+                                                this.state.avatars.map((avatar) => {
+                                                    return <img src={avatar} className="rounded-circle float-left mr-3" alt="avatar" width="80px" />
+                                                })
+                                            }
+                                        </div>
+                                        <h3 class="text-center mt-4">Upload your own</h3>
+                                        <div className="d-flex justify-content-center text-center">
+                                        <div class="upload-btn-wrapper">
+                                            <labbel class="btn my-btn ubtn text-color font-roboto" htmlFor="cupload">Upload a file</labbel>
+                                            <input type="file" name="myfile" id="cupload" onChange={this.selectFile} />
+                                            <p className="text-center font-roboto">{this.state.fileName}</p>
+                                            <p className="text-center">{this.state.fileError}</p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </Modal.Body>
                             </Modal>
                         </div>
                         <div className="col-sm-9 order-sm-1">
@@ -147,12 +188,20 @@ class CreateProfile extends React.Component {
                                             <Form>
                                                 <Row>
                                                     <Col sm={6}>
-                                                        <Form.Label>Full Name</Form.Label>
-                                                        <Form.Control placeholder="Sahil Mahajan" />
+                                                        <Row className="m-0">
+                                                            <Col sm={6} className="pl-0">
+                                                                <Form.Label>First Name</Form.Label>
+                                                                <Form.Control name="first_name" placeholder="John" />
+                                                            </Col>
+                                                            <Col sm={6} className="pr-0">
+                                                                <Form.Label>Last Name</Form.Label>
+                                                                <Form.Control name="last_name" placeholder="Doe" />
+                                                            </Col>
+                                                        </Row>
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>Email</Form.Label>
-                                                        <Form.Control placeholder="sahil@designmocha.com" />
+                                                        <Form.Control placeholder="johndoe@gmail.com" />
                                                     </Col>
                                                 </Row>
                                                 <Row>
