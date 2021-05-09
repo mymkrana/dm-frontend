@@ -1,5 +1,4 @@
 import axios from "axios"
-const { REACT_APP_BASE_URL } = process.env;
 export const ProfileOne = (user) => {
     return new Promise((resolve, reject) => {
         var data = {
