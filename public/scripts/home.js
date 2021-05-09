@@ -15,10 +15,10 @@ $('.sabsolute').mousemove(function(e) {
         background: originalBG
     });
 });
-$(document).ready(function () {
-    $("#page").hover(function () {
-        $("#background-video").trigger('play')
-    })
-    // document.getElementById("#background-video").autoplay;
-    // $("#background-video").trigger('play')
-})
+// $(document).ready(function () {
+//     $("#page").hover(function () {
+//         $("#background-video").trigger('play')
+//     })
+//     // document.getElementById("#background-video").autoplay;
+//     // $("#background-video").trigger('play')
+// })

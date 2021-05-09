@@ -23,11 +23,11 @@ class HomePage extends React.Component {
                 <section className="main-section">
                     <div>
                         <div className='item slide-1'>
-                            <video id="background-video" loop muted autoplay>
+                            <video autoPlay loop muted id="background-video">
                                 <source src={SliderVideo} type="video/mp4" />
                             </video>
                             <div className="sabsolute">
-                            <div id="div1" class="cursor"></div>
+                                <div id="div1" class="cursor"></div>
                                 <div className="container">
                                     <div className="slide-header">
                                         <h3 className="text-color text-center">Our vision is to be India`s biggest design crowdsourcing platform..</h3>
@@ -74,7 +74,7 @@ Indian design & creative talent to the world..</h3>
                 <div className="section-even sectione2">
                     <div className="container">
                         <div className="row">
-                            <h3 className="heading-2">“MANY INDIAS IN ONE,<br/> A WORLD IN ITSELF”</h3>
+                            <h3 className="heading-2">“MANY INDIAS IN ONE,<br /> A WORLD IN ITSELF”</h3>
                             <p>India, a rapidly growing economy, with more youth than elderly population, the biggest
                             democracy in the world, and population of 1.37 Billion. Needless to say the  consumption of
                             good designed products is only going to go up. But
