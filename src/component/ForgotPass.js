@@ -58,7 +58,7 @@ class ForgotPass extends React.Component {
                                         {!this.state.isloading ? '' : (<p className="text-color">Loading please wait..</p>)}
                                         <div class="form-group mb-5">
                                             <label htmlFor="exampleInputEmail1" class="fotmlab">Email</label>
-                                            <input type="email" name='email' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email" onChange={this.handleChange} required />
+                                            <input type="email" name='email' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email address" onChange={this.handleChange} required />
                                         </div>
                                         <button type="submit" class="btn form" disabled={this.state.isloading}>Forgot Password</button>
                                         <Link to="/login" class="btn form a">Login</Link>

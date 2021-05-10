@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Row, Col, Nav, Modal } from 'react-bootstrap'
+import { Form, Row, Col, Modal } from 'react-bootstrap'
 import '../css/profile.css'
 import logo from '../images/logo-dark.png'
 import { getCategories } from '../services/getCategories';
@@ -10,7 +10,7 @@ import { uploadAvatar } from '../services/uploadAvatar';
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false };
+        this.state = { show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourny: {categories:'hi', sub_category: ''} };
     }
     async componentDidMount() {
         var cavatars = await getAvatars()
@@ -27,6 +27,18 @@ class CreateProfile extends React.Component {
                 }
                 this.setState({ catArr: catArr })
             })
+    }
+    handleInput = async (e) => {
+        var basicInfo = {...this.state.basicInfo}
+        basicInfo[e.target.name] = e.target.value
+        await this.setState({basicInfo: basicInfo})
+        console.log("Basic Info", this.state.basicInfo)
+    }
+    handleInput2 = async (e) => {
+        var djourney = {...this.state.djourney}
+        djourney[e.target.name] = e.target.value
+        await this.setState({djourney: djourney})
+        console.log("Design Journey", this.state.djourney)
     }
     selectFile = (e) => {
         var fileExt = e.target.files[0].name.split(".")
@@ -56,6 +68,12 @@ class CreateProfile extends React.Component {
             var Scat = [...this.state.Scat]
             Scat.push(e.target.name)
             await this.setState({ Scat: Scat })
+            const djourney = {...this.state.djourney}
+            console.log(djourney.categories)
+            djourney.categories = Scat.join()
+            console.log(djourney)
+            await this.setState({djourney: djourney})
+            console.log("Design Journey", this.state.djourney)
             var SubCat = []
             this.state.Scat.map((cat) => {
                 this.state.categories[cat].map((subcat) => {
@@ -71,6 +89,12 @@ class CreateProfile extends React.Component {
             var rmindex = Srcat.findIndex((item) => (item === e.target.name))
             Srcat.splice(rmindex, 1)
             await this.setState({ Scat: Srcat })
+            const djourney2 = {...this.state.djourney}
+            console.log(djourney2.categories)
+            djourney2.categories = Srcat.join()
+            console.log(djourney2)
+            await this.setState({djourney: djourney2})
+            console.log("Design Journey", this.state.djourney)
             var eSubCat = []
             this.state.Scat.map((cat) => {
                 this.state.categories[cat].map((subcat) => {
@@ -87,18 +111,33 @@ class CreateProfile extends React.Component {
             const Subselected = this.state.SubSelected
             Subselected.push(e.target.name)
             await this.setState({ Subselected: Subselected })
-
+            const djourney = {...this.state.djourney}
+            console.log(djourney.sub_category)
+            djourney.sub_category = Subselected.join()
+            console.log(djourney)
+            await this.setState({djourney: djourney})
+            console.log("Design Journey", this.state.djourney)
         }
         else {
             const Subselected = this.state.SubSelected
             var rindex = Subselected.findIndex((item) => { return item === e.target.name })
             Subselected.splice(rindex, 1)
             await this.setState({ Subselected: Subselected })
+            const djourney2 = {...this.state.djourney}
+            console.log(djourney2.sub_category)
+            djourney2.sub_category = Subselected.join()
+            console.log(djourney2)
+            await this.setState({djourney: djourney2})
+            console.log("Design Journey", this.state.djourney)
         }
     }
     countrySelect = async (e) => {
         var states = await csc.getStatesOfCountry(e.target.selectedOptions[0].getAttribute('data-iso'))
         await this.setState({ states: states })
+        var basicInfo = {...this.state.basicInfo}
+        basicInfo[e.target.name] = e.target.value
+        await this.setState({basicInfo: basicInfo})
+        console.log("Basic Info", this.state.basicInfo)
     }
     render() {
         // if(!this.props.location.state) {
@@ -191,27 +230,27 @@ class CreateProfile extends React.Component {
                                                         <Row className="m-0">
                                                             <Col sm={6} className="pl-0">
                                                                 <Form.Label>First Name</Form.Label>
-                                                                <Form.Control name="first_name" placeholder="John" />
+                                                                <Form.Control name="first_name" placeholder="John" onChange={this.handleInput} required/>
                                                             </Col>
                                                             <Col sm={6} className="pr-0">
                                                                 <Form.Label>Last Name</Form.Label>
-                                                                <Form.Control name="last_name" placeholder="Doe" />
+                                                                <Form.Control name="last_name" placeholder="Doe" onChange={this.handleInput} required/>
                                                             </Col>
                                                         </Row>
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>Email</Form.Label>
-                                                        <Form.Control placeholder="johndoe@gmail.com" />
+                                                        <Form.Control name="email" placeholder="johndoe@gmail.com" onChange={this.handleInput}/>
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Form.Label>Phone</Form.Label>
-                                                        <Form.Control placeholder="999 999 9999" />
+                                                        <Form.Control name="mobile_number" placeholder="999 999 9999" onChange={this.handleInput} required/>
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>Gender</Form.Label>
-                                                        <Form.Control as="select" defaultValue="select">
+                                                        <Form.Control name="gender" as="select" defaultValue="select" onChange={this.handleInput}>
                                                             <option>Select Gender</option>
                                                             <option>Male</option>
                                                             <option>Female</option>
@@ -221,7 +260,7 @@ class CreateProfile extends React.Component {
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Form.Label>Date of Birth</Form.Label>
-                                                        <Form.Control type="date" placeholder="First name" />
+                                                        <Form.Control name="date_of_birth" type="date" placeholder="Date of Birth" onChange={this.handleInput}/>
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>Country</Form.Label>
@@ -236,14 +275,14 @@ class CreateProfile extends React.Component {
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Form.Label>Address</Form.Label>
-                                                        <Form.Control placeholder="Your Full Address" />
+                                                        <Form.Control name="address" placeholder="Your Full Address" onChange={this.handleInput}/>
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>State</Form.Label>
-                                                        <Form.Control as="select" defaultValue="select">
+                                                        <Form.Control name="state" as="select" defaultValue="select" onChange={this.handleInput}>
                                                             <option>Select State</option>
                                                             {this.state.states.map((state) => {
-                                                                return (<option value={state.stateCode}>{state.name}</option>)
+                                                                return (<option value={state.name}>{state.name}</option>)
                                                             })}
                                                         </Form.Control>
                                                     </Col>
@@ -251,11 +290,11 @@ class CreateProfile extends React.Component {
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Form.Label>Pincode</Form.Label>
-                                                        <Form.Control placeholder="Enter Pincode" />
+                                                        <Form.Control name="pin_code" placeholder="Enter Pincode" onChange={this.handleInput}/>
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>City</Form.Label>
-                                                        <Form.Control placeholder="Enter City Name" />
+                                                        <Form.Control name="city" placeholder="Enter City Name" onChange={this.handleInput}/>
                                                     </Col>
                                                 </Row>
                                                 <Row>
@@ -276,28 +315,28 @@ class CreateProfile extends React.Component {
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Add user name</Form.Label>
-                                                    <Form.Control />
+                                                    <Form.Control name="profile_name" onChange={this.handleInput2}/>
                                                     <span>This is the second thing that others would see after your avatar. So please make sure it is catchy enough for others to remember eg.  Logoninja, Artistik, Quickart, etc..  Please avoid using your name here. </span>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Add your profile description</Form.Label>
-                                                    <Form.Control />
+                                                    <Form.Control name="profile_description" onChange={this.handleInput2}/>
                                                     <span>This is the third thing that others would see next to your user name. This should briefely tell others on what do you have to offer.  eg. “modern logo designs in 24 hours”,“real hand painted artworks only”, “High quality video editing”. Max 50 alphabets. </span>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label>How would you define your design sensibility/ style</Form.Label>
-                                                    <Form.Control as="textarea" rows={3} />
+                                                    <Form.Control name="design_sensibility_style" as="textarea" rows={3} onChange={this.handleInput2}/>
                                                     <span>We believe every designer has his/her own way of approaching design. Some make it arty, white others make it more detail oriented, etc...this data will help us in sharpening your profile and the getting you the right work.Max 300 words. </span>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Your design journey so far</Form.Label>
-                                                    <Form.Control as="textarea" rows={3} />
+                                                    <Form.Control name="design_journey" as="textarea" rows={3} onChange={this.handleInput2}/>
                                                     <span>Brief description. max 600 words.</span>
                                                 </Col>
                                             </Row>
@@ -349,17 +388,16 @@ class CreateProfile extends React.Component {
                                             <Row>
                                                 <Col>
                                                     <Form.Label><b>Personal Website</b></Form.Label>
-                                                    <Form.Control />
+                                                    <Form.Control name="personal_website" onChange={this.handleInput2}/>
                                                     <span>Your home page, blog or company site.</span>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label><b>Portfolio URL</b></Form.Label>
-                                                    <Form.Control />
+                                                    <Form.Control name="portfolio_urls" onChange={this.handleInput2}/>
                                                     <span>Share your current online presence like Behance, Dribbble, etc.</span>
                                                     <br />
-                                                    <Nav.Link href='/'>+ Add</Nav.Link>
                                                 </Col>
                                             </Row>
                                             <Row>
@@ -395,7 +433,6 @@ class CreateProfile extends React.Component {
                                                 <Col>
                                                     <button className="mt-5 p-2 btn my-btn cbtn text-color">choose image</button>
                                                     <br /><br />
-                                                    <Nav.Link href='/'>+ Add</Nav.Link>
                                                 </Col>
                                             </Row>
                                             <Row>

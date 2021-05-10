@@ -39,7 +39,7 @@ class Login extends React.Component {
                 .then((response) => {
                     console.log(response.data)
                     const {cookies} = this.props
-                    cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none"})
+                    cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none", httpOnly: false, path: '/'})
                     // cookies.set("authenticated", response.data.authenticated, { maxAge: 3600 })
                     // cookies.set("userProfile", response.data.userProfile, { maxAge: 3600, sameSite:"none" })
                     this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
