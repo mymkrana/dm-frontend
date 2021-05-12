@@ -8,8 +8,10 @@ import csc from 'country-state-city'
 import { getAvatars } from '../services/getAvatars';
 import { uploadAvatar } from '../services/uploadAvatar';
 import { getProfile } from '../services/getProfile';
-import { createProfile } from '../services/createProfile';
+import { updateProfile } from '../services/updateProfile';
 import { getAuth } from '../services/getAuth';
+import Cookies from 'js-cookie';
+import {createProfile} from '../services/createProfile'
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
@@ -21,23 +23,38 @@ class CreateProfile extends React.Component {
         var basicInfo = { ...this.state.basicInfo }
         basicInfo.full_name = basicInfo.first_name + " " + basicInfo.last_name
         await this.setState({ basicInfo: basicInfo })
-        createProfile(this.state.basicInfo)
-        .then((res) => {
-            this.setState({bloading: "Profile has been updated"})
-        })
-        .catch((err) =>{
-            if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
-                this.setState({ bloading: "Session Expired Please Login" })
-                this.setState({ isAuthenticated: false })
-            }
-        })
+        console.log(this.state.isProfile)
+        if(this.state.isProfile === true) {
+            updateProfile(this.state.basicInfo)
+            .then((res) => {
+                this.setState({bloading: "Profile has been updated"})
+            })
+            .catch((err) =>{
+                if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
+                    this.setState({ bloading: "Session Expired Please Login" })
+                    this.setState({ isAuthenticated: false })
+                }
+            })
+        }
+        else {
+            createProfile(this.state.basicInfo)
+            .then((res) => {
+                this.setState({bloading: "Profile has been Created"})
+            })
+            .catch((err) =>{
+                if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
+                    this.setState({ bloading: "Session Expired Please Login" })
+                    this.setState({ isAuthenticated: false })
+                }
+            })
+        }
     }
     submitDesignJourney = async (e) => {
         e.preventDefault()
-        this.setState({bloading: "Loading please wait..."})
+        this.setState({cloading: "Loading please wait..."})
         var djourney = { ...this.state.djourney }
         await this.setState({ djourney: djourney })
-        createProfile(this.state.djourney)
+        updateProfile(this.state.djourney)
         .then((res) => {
             this.setState({cloading: "Profile has been updated"})
         })
@@ -49,30 +66,28 @@ class CreateProfile extends React.Component {
         })
     }
     async componentDidMount() {
+        await this.setState({isProfile: Cookies.get("userProfile")})
+        console.log(this.state.isProfile)
         var auth = getAuth()
         await this.setState({isAuthenticated: auth})
         getProfile().then(async (res) => {
             var profile = {...res.data}
-            await this.setState({basicInfo: profile, profileImg: profile.photo_url, isAvatar: true, djourney: profile})
-            // var SubCat = []
-            // console.log(this.state.djourney.categories.split(","))
-            // var scat =  this.state.djourney.categories.split(",")
-            // scat.map((cat) => {
-            //     this.state.categories[cat].map((subcat) => {
-            //         SubCat.push(subcat)
-            //         return subcat
-            //     })
-            //     return cat
-            // })
-            // await this.setState({ SubCat: SubCat })
+            if(profile.photo_url) {
+                await this.setState({profileImg: profile.photo_url, isAvatar: true})
+            }
+            await this.setState({basicInfo: profile, profileImg: profile.photo_url, djourney: profile})
             console.log(this.state.basicInfo)
-            var country = this.state.countries.filter((country) => {
-                return profile.country === country.name
-            })
-            console.log("country", country)
-            var isoCode = country[0].isoCode
-            var states = await csc.getStatesOfCountry(isoCode)
-            await this.setState({ states: states })
+            if(profile.country) {
+                var country = this.state.countries.filter((country) => {
+                    return profile.country === country.name
+                })
+                console.log("country", country)
+                var isoCode = country[0].isoCode
+                var states = await csc.getStatesOfCountry(isoCode)
+                await this.setState({ states: states })
+            }
+        }).catch((err) => {
+            console.log(err.response.data)
         })
         console.log("path name", this.props.location)
         var cavatars = await getAvatars()
@@ -88,6 +103,17 @@ class CreateProfile extends React.Component {
                     catArr.push(cat)
                 }
                 this.setState({ catArr: catArr })
+                // var SubCat = []
+                // console.log(this.state.djourney.categories.split(","))
+                // var scat =  this.state.djourney.categories.split(",")
+                // scat.map((cat) => {
+                //     this.state.categories[cat].map((subcat) => {
+                //         SubCat.push(subcat)
+                //         return subcat
+                //     })
+                //     return cat
+                // })
+                // await this.setState({ SubCat: SubCat })
             })
     }
     handleInput = async (e) => {
@@ -447,7 +473,7 @@ class CreateProfile extends React.Component {
                                                 {this.state.catArr.map((cat) => {
                                                     return (<Col sm={3} key={cat}>
                                                         <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input" id={cat.split(" ")[0]} name={cat} onChange={this.handleCheck} checked={this.state.djourney.categories.split(",").includes(cat) ? "checked" : ""}/>
+                                                            <input type="checkbox" className="form-check-input" id={cat.split(" ")[0]} name={cat} onChange={this.handleCheck} checked={(this.state.djourney.categories && this.state.djourney.categories.split(",").includes(cat)) ? "checked" : ""}/>
                                                             <label htmlFor={cat.split(" ")[0]} className='form-label'>{cat}</label>
                                                         </div>
                                                     </Col>)

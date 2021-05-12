@@ -3,7 +3,7 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { Link, Redirect } from 'react-router-dom';
 import '../css/register.css'
 import { RegisterMe } from '../services/RegisterMe';
-// import loader from '../images/loader.gif'
+var Cookies = require("js-cookie")
 class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -48,10 +48,12 @@ class Register extends React.Component {
                 password: this.state.password,
                 confirmPassword: this.state.password
             }
-            RegisterMe(data).then((res) => {
+            RegisterMe(data).then(async (res) => {
                 console.log("sucess", res)
                 this.setState({ isloading: false })
                 if (res.status === 201) {
+                    await Cookies.remove("session")
+                    await Cookies.remove("userProfile")
                     this.setState({ successMessage: "Registration Successful", registered: true })
                 }
             }).catch((err) => {
