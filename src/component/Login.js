@@ -1,7 +1,7 @@
 import React from 'react';
 // import { Nav } from 'react-bootstrap';
 import '../css/login.css'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { LoginMe } from '../services/LoginMe';
 import { getSession } from '../services/getSession'
 import { instanceOf } from 'prop-types';
@@ -14,7 +14,8 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isloggedin: false
+            isloggedin: false,
+            Redirect: false
         };
     }
     handleChange = async (e) => {
@@ -36,13 +37,16 @@ class Login extends React.Component {
                     'Authorization':"Bearer " + res.data.token
                   }
                 getSession(headers)
-                .then((response) => {
+                .then(async (response) => {
                     console.log(response.data)
                     const {cookies} = this.props
-                    cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none", httpOnly: false, path: '/'})
+                    cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none"})
                     // cookies.set("authenticated", response.data.authenticated, { maxAge: 3600 })
-                    // cookies.set("userProfile", response.data.userProfile, { maxAge: 3600, sameSite:"none" })
-                    this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
+                    cookies.set("userProfile", response.data.userProfile, { maxAge: 3600, secure:true, sameSite:"none" })
+                    await this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
+                    if(this.props.location.state) {
+                        this.setState({Redirect: true})
+                    }
                 })
                 .catch((err) => {
                     console.log(err)
@@ -64,6 +68,9 @@ class Login extends React.Component {
         })
     }
     render() {
+        if(this.state.Redirect) {
+            return <Redirect to={this.props.location.state.rpath} />
+        }
         return (
             <div>
                 {/* {this.state.isloading ? (<div className="loader"><img src = {loader} alt="loader"/></div>) : ''} */}

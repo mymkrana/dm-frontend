@@ -5,7 +5,6 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import sdown from '../images/sdown.png'
 import SliderVideo from '../images/slider-video.mp4'
 import { Link } from 'react-router-dom';
-import { ProfileOne } from '../services/ProfileOne';
 import '../big-counter.css'
 import { getAuth } from '../services/getAuth';
 class HomePage extends React.Component {
@@ -15,7 +14,6 @@ class HomePage extends React.Component {
     }
     componentDidMount() {
         getAuth()
-        ProfileOne()
         const script = document.createElement("script");
         script.src = "/scripts/home.js";
         script.async = true;
@@ -28,7 +26,6 @@ class HomePage extends React.Component {
     render() {
         return (
             <div className="page-container" id="page">
-                <script src='../'></script>
                 <section className="main-section">
                     <div>
                         <div className='item slide-1'>

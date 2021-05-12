@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Form, Row, Col, Modal } from 'react-bootstrap'
 import '../css/profile.css'
 import logo from '../images/logo-dark.png'
@@ -7,12 +7,74 @@ import { getCategories } from '../services/getCategories';
 import csc from 'country-state-city'
 import { getAvatars } from '../services/getAvatars';
 import { uploadAvatar } from '../services/uploadAvatar';
+import { getProfile } from '../services/getProfile';
+import { createProfile } from '../services/createProfile';
+import { getAuth } from '../services/getAuth';
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourny: {categories:'hi', sub_category: ''} };
+        this.state = { show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '' };
+    }
+    submitBasicProfile = async (e) => {
+        e.preventDefault()
+        this.setState({bloading: "Loading please wait..."})
+        var basicInfo = { ...this.state.basicInfo }
+        basicInfo.full_name = basicInfo.first_name + " " + basicInfo.last_name
+        await this.setState({ basicInfo: basicInfo })
+        createProfile(this.state.basicInfo)
+        .then((res) => {
+            this.setState({bloading: "Profile has been updated"})
+        })
+        .catch((err) =>{
+            if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
+                this.setState({ bloading: "Session Expired Please Login" })
+                this.setState({ isAuthenticated: false })
+            }
+        })
+    }
+    submitDesignJourney = async (e) => {
+        e.preventDefault()
+        this.setState({bloading: "Loading please wait..."})
+        var djourney = { ...this.state.djourney }
+        await this.setState({ djourney: djourney })
+        createProfile(this.state.djourney)
+        .then((res) => {
+            this.setState({cloading: "Profile has been updated"})
+        })
+        .catch((err) =>{
+            if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
+                this.setState({ cloading: "Session Expired Please Login" })
+                this.setState({ isAuthenticated: false })
+            }
+        })
     }
     async componentDidMount() {
+        var auth = getAuth()
+        await this.setState({isAuthenticated: auth})
+        getProfile().then(async (res) => {
+            var profile = {...res.data}
+            await this.setState({basicInfo: profile, profileImg: profile.photo_url, isAvatar: true, djourney: profile})
+            // var SubCat = []
+            // console.log(this.state.djourney.categories.split(","))
+            // var scat =  this.state.djourney.categories.split(",")
+            // scat.map((cat) => {
+            //     this.state.categories[cat].map((subcat) => {
+            //         SubCat.push(subcat)
+            //         return subcat
+            //     })
+            //     return cat
+            // })
+            // await this.setState({ SubCat: SubCat })
+            console.log(this.state.basicInfo)
+            var country = this.state.countries.filter((country) => {
+                return profile.country === country.name
+            })
+            console.log("country", country)
+            var isoCode = country[0].isoCode
+            var states = await csc.getStatesOfCountry(isoCode)
+            await this.setState({ states: states })
+        })
+        console.log("path name", this.props.location)
         var cavatars = await getAvatars()
         cavatars.shift()
         await this.setState({ avatars: cavatars })
@@ -29,32 +91,63 @@ class CreateProfile extends React.Component {
             })
     }
     handleInput = async (e) => {
-        var basicInfo = {...this.state.basicInfo}
+        var basicInfo = { ...this.state.basicInfo }
         basicInfo[e.target.name] = e.target.value
-        await this.setState({basicInfo: basicInfo})
-        console.log("Basic Info", this.state.basicInfo)
+        await this.setState({ basicInfo: basicInfo })
+        console.log(this.state.basicInfo)
     }
     handleInput2 = async (e) => {
-        var djourney = {...this.state.djourney}
+        console.log(e.target.name)
+        var djourney = { ...this.state.djourney }
         djourney[e.target.name] = e.target.value
-        await this.setState({djourney: djourney})
-        console.log("Design Journey", this.state.djourney)
+        console.log(djourney)
+        await this.setState({ djourney: djourney })
+        console.log(this.state.djourney)
+    }
+    handleOthers = async (e) => {
+        if(e.target.checked) {
+            console.log(e.target.name)
+            var djourney = { ...this.state.djourney }
+            var cats = [djourney.categories.split(",")]
+            cats.push("others")
+            console.log(cats)
+            djourney[e.target.name] = cats.join()
+            console.log(djourney)
+            await this.setState({ djourney: djourney })
+            console.log(this.state.djourney)
+        }
+        else {
+
+        }
     }
     selectFile = (e) => {
         var fileExt = e.target.files[0].name.split(".")
-        if((fileExt[fileExt.length-1].toLowerCase() === "png") || (fileExt[fileExt.length-1].toLowerCase() === "jpeg") || (fileExt[fileExt.length-1].toLowerCase() === "jpg")) {
-            this.setState({fileName: e.target.files[0].name})
+        if ((fileExt[fileExt.length - 1].toLowerCase() === "png") || (fileExt[fileExt.length - 1].toLowerCase() === "jpeg") || (fileExt[fileExt.length - 1].toLowerCase() === "jpg")) {
+            this.setState({ fileName: "Uploading please wait..." })
             uploadAvatar(e.target.files[0]).then((res) => {
-                console.log("file uploaded")
-                this.setState({isAvatar: true, profileImg: "https://storage.googleapis.com/designmocha-dev.appspot.com/avatarImages/" + this.state.fileName})
+                getProfile()
+                    .then(async (res) => {
+                        await this.setState({profileImg: res.data.photo_url, isAvatar:true})
+                        this.handleClose()
+                    })
+                    .catch((err) => {
+                        this.setState({fileName: "create profile first"})
+                    })
+
             })
-            .catch((err) => {
-                console.log(err)
-                this.setState({fileName: err.response})
-            })
+                .catch((err) => {
+                    console.log(err.response)
+
+                    if (err.response.data.detail === "Invalid session: Illegal session cookie provided: None. session cookie must be a non-empty string.") {
+                        this.setState({ fileName: "Session Expired Please Login" })
+                        setTimeout(() => {
+                            this.setState({ isAuthenticated: false })
+                        }, 2000)
+                    }
+                })
         }
         else {
-            this.setState({fileName: "select .png or .jpg file"})
+            this.setState({ fileName: "select .png or .jpg file" })
         }
     }
     handleShow = () => {
@@ -68,12 +161,9 @@ class CreateProfile extends React.Component {
             var Scat = [...this.state.Scat]
             Scat.push(e.target.name)
             await this.setState({ Scat: Scat })
-            const djourney = {...this.state.djourney}
-            console.log(djourney.categories)
+            const djourney = { ...this.state.djourney }
             djourney.categories = Scat.join()
-            console.log(djourney)
-            await this.setState({djourney: djourney})
-            console.log("Design Journey", this.state.djourney)
+            await this.setState({ djourney: djourney })
             var SubCat = []
             this.state.Scat.map((cat) => {
                 this.state.categories[cat].map((subcat) => {
@@ -89,12 +179,9 @@ class CreateProfile extends React.Component {
             var rmindex = Srcat.findIndex((item) => (item === e.target.name))
             Srcat.splice(rmindex, 1)
             await this.setState({ Scat: Srcat })
-            const djourney2 = {...this.state.djourney}
-            console.log(djourney2.categories)
+            const djourney2 = { ...this.state.djourney }
             djourney2.categories = Srcat.join()
-            console.log(djourney2)
-            await this.setState({djourney: djourney2})
-            console.log("Design Journey", this.state.djourney)
+            await this.setState({ djourney: djourney2 })
             var eSubCat = []
             this.state.Scat.map((cat) => {
                 this.state.categories[cat].map((subcat) => {
@@ -111,38 +198,36 @@ class CreateProfile extends React.Component {
             const Subselected = this.state.SubSelected
             Subselected.push(e.target.name)
             await this.setState({ Subselected: Subselected })
-            const djourney = {...this.state.djourney}
-            console.log(djourney.sub_category)
+            const djourney = { ...this.state.djourney }
             djourney.sub_category = Subselected.join()
-            console.log(djourney)
-            await this.setState({djourney: djourney})
-            console.log("Design Journey", this.state.djourney)
+            await this.setState({ djourney: djourney })
         }
         else {
             const Subselected = this.state.SubSelected
             var rindex = Subselected.findIndex((item) => { return item === e.target.name })
             Subselected.splice(rindex, 1)
             await this.setState({ Subselected: Subselected })
-            const djourney2 = {...this.state.djourney}
-            console.log(djourney2.sub_category)
+            const djourney2 = { ...this.state.djourney }
             djourney2.sub_category = Subselected.join()
-            console.log(djourney2)
-            await this.setState({djourney: djourney2})
-            console.log("Design Journey", this.state.djourney)
+            await this.setState({ djourney: djourney2 })
         }
     }
     countrySelect = async (e) => {
         var states = await csc.getStatesOfCountry(e.target.selectedOptions[0].getAttribute('data-iso'))
         await this.setState({ states: states })
-        var basicInfo = {...this.state.basicInfo}
+        var basicInfo = { ...this.state.basicInfo }
         basicInfo[e.target.name] = e.target.value
-        await this.setState({basicInfo: basicInfo})
-        console.log("Basic Info", this.state.basicInfo)
+        await this.setState({ basicInfo: basicInfo })
     }
     render() {
-        // if(!this.props.location.state) {
-        //     return(<Redirect to='/register' />)
-        // }
+        if (this.state.isAuthenticated === false) {
+            return <Redirect
+            to={{
+            pathname: "/login",
+            state: { redirect: true, rpath: this.props.location.pathname }
+          }}
+        />
+        }
         var username = 'SahilDesigns'
         if (this.props.location.state) {
             username = this.props.location.state.username;
@@ -154,8 +239,8 @@ class CreateProfile extends React.Component {
                         <div className="col-sm-3 paside order-sm-12">
                             <div className="usr-profile pt-5 pb-2">
                                 <div className='avatar mb-2'>
-                                    <span className='davatar' style={{display: !this.state.isAvatar ? "flex" : "none"}}>{username[0]}</span>
-                                    <img src={this.state.profileImg} alt='profile' style={{display: this.state.isAvatar ? "block" : "none"}} className="rounded-circle" />
+                                    <span className='davatar' style={{ display: !this.state.isAvatar ? "flex" : "none" }}>{username[0]}</span>
+                                    <img src={this.state.profileImg} alt='profile' style={{ display: this.state.isAvatar ? "block" : "none" }} className="rounded-circle" />
                                 </div>
                                 <p className="font-roboto text-center mb-0 weight-600">Add an avatar</p>
                                 <div className='ch-image'>
@@ -173,7 +258,7 @@ class CreateProfile extends React.Component {
                                         <a className="nav-link active text-color" data-toggle="pill" href="#pbasic">Profile Basics</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link text-color" data-toggle="pill" href="#djourney">Design Journy</a>
+                                        <a className="nav-link text-color" data-toggle="pill" href="#djourney">Design journey</a>
                                     </li>
                                     <li className="nav-item">
                                         <a className="nav-link text-color" data-toggle="pill" href="#mwork">My Work</a>
@@ -203,12 +288,12 @@ class CreateProfile extends React.Component {
                                         </div>
                                         <h3 class="text-center mt-4">Upload your own</h3>
                                         <div className="d-flex justify-content-center text-center">
-                                        <div class="upload-btn-wrapper">
-                                            <labbel class="btn my-btn ubtn text-color font-roboto" htmlFor="cupload">Upload a file</labbel>
-                                            <input type="file" name="myfile" id="cupload" onChange={this.selectFile} />
-                                            <p className="text-center font-roboto">{this.state.fileName}</p>
-                                            <p className="text-center">{this.state.fileError}</p>
-                                        </div>
+                                            <div class="upload-btn-wrapper">
+                                                <labbel class="btn my-btn ubtn text-color font-roboto" htmlFor="cupload">Upload a file</labbel>
+                                                <input type="file" name="myfile" id="cupload" onChange={this.selectFile} />
+                                                <p className="text-center font-roboto">{this.state.fileName}</p>
+                                                <p className="text-center">{this.state.fileError}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </Modal.Body>
@@ -224,50 +309,51 @@ class CreateProfile extends React.Component {
                                         <h3 className="weight-600">Welcome, {(username !== '') ? username : ''}<br />Let's create your profile..</h3>
                                         <p>Let other get to know you better!</p>
                                         <div className="form-1">
-                                            <Form>
+                                            <Form onSubmit={this.submitBasicProfile}>
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Row className="m-0">
                                                             <Col sm={6} className="pl-0">
                                                                 <Form.Label>First Name</Form.Label>
-                                                                <Form.Control name="first_name" placeholder="John" onChange={this.handleInput} required/>
+                                                                <Form.Control name="first_name" placeholder="John" value={this.state.basicInfo ? this.state.basicInfo.first_name : ''} onChange={this.handleInput} required />
                                                             </Col>
                                                             <Col sm={6} className="pr-0">
                                                                 <Form.Label>Last Name</Form.Label>
-                                                                <Form.Control name="last_name" placeholder="Doe" onChange={this.handleInput} required/>
+                                                                <Form.Control name="last_name" placeholder="Doe" value={this.state.basicInfo ? this.state.basicInfo.last_name : ''} onChange={this.handleInput} required />
                                                             </Col>
                                                         </Row>
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>Email</Form.Label>
-                                                        <Form.Control name="email" placeholder="johndoe@gmail.com" onChange={this.handleInput}/>
+                                                        <Form.Control name="email" value={this.state.basicInfo ? this.state.basicInfo.email : ''} placeholder="johndoe@gmail.com" />
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Form.Label>Phone</Form.Label>
-                                                        <Form.Control name="mobile_number" placeholder="999 999 9999" onChange={this.handleInput} required/>
+                                                        <Form.Control name="mobile_number" value={this.state.basicInfo ? this.state.basicInfo.mobile_number : ''} placeholder="999 999 9999" onChange={this.handleInput} required />
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>Gender</Form.Label>
                                                         <Form.Control name="gender" as="select" defaultValue="select" onChange={this.handleInput}>
-                                                            <option>Select Gender</option>
-                                                            <option>Male</option>
-                                                            <option>Female</option>
-                                                            <option>Others</option>                                                        </Form.Control>
+                                                            <option >Select Gender</option>
+                                                            <option selected={((this.state.basicInfo) && (this.state.basicInfo.gender === "Male")) ? "selected" : false} value="Male">Male</option>
+                                                            <option selected={((this.state.basicInfo) && (this.state.basicInfo.gender === "Female")) ? "selected" : false} value="Female">Female</option>
+                                                            <option selected={((this.state.basicInfo) && (this.state.basicInfo.gemder === "Others")) ? "selected" : false} value="Others">Others</option>
+                                                        </Form.Control>
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Form.Label>Date of Birth</Form.Label>
-                                                        <Form.Control name="date_of_birth" type="date" placeholder="Date of Birth" onChange={this.handleInput}/>
+                                                        <Form.Control name="date_of_birth" type="date" value={this.state.basicInfo ? this.state.basicInfo.date_of_birth : ''} placeholder="Date of Birth" onChange={this.handleInput} />
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>Country</Form.Label>
-                                                        <Form.Control as="select" name="country" defaultValue="select" onChange={this.countrySelect}>
+                                                        <Form.Control as="select" name="country" defaultValue={this.state.basicInfo ? this.state.basicInfo.country : "select"} onChange={this.countrySelect}>
                                                             <option>Select Country</option>
                                                             {this.state.countries.map((country) => {
-                                                                return (<option data-iso={country.isoCode} value={country.name}>{country.name}</option>)
+                                                                return (<option data-iso={country.isoCode} value={country.name} selected={((this.state.basicInfo) && (this.state.basicInfo.country === country.name)) ? "selected" : false}>{country.name}</option>)
                                                             })}
                                                         </Form.Control>
                                                     </Col>
@@ -275,14 +361,14 @@ class CreateProfile extends React.Component {
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Form.Label>Address</Form.Label>
-                                                        <Form.Control name="address" placeholder="Your Full Address" onChange={this.handleInput}/>
+                                                        <Form.Control name="address" placeholder="Your Full Address" value={this.state.basicInfo ? this.state.basicInfo.address : ''} onChange={this.handleInput} />
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>State</Form.Label>
                                                         <Form.Control name="state" as="select" defaultValue="select" onChange={this.handleInput}>
                                                             <option>Select State</option>
                                                             {this.state.states.map((state) => {
-                                                                return (<option value={state.name}>{state.name}</option>)
+                                                                return (<option value={state.name} selected={((this.state.basicInfo) && (this.state.basicInfo.state === state.name)) ? "selected" : false}>{state.name}</option>)
                                                             })}
                                                         </Form.Control>
                                                     </Col>
@@ -290,15 +376,16 @@ class CreateProfile extends React.Component {
                                                 <Row>
                                                     <Col sm={6}>
                                                         <Form.Label>Pincode</Form.Label>
-                                                        <Form.Control name="pin_code" placeholder="Enter Pincode" onChange={this.handleInput}/>
+                                                        <Form.Control name="pin_code" placeholder="Enter Pincode" value={this.state.basicInfo ? this.state.basicInfo.pin_code : ''} onChange={this.handleInput} />
                                                     </Col>
                                                     <Col sm={6}>
                                                         <Form.Label>City</Form.Label>
-                                                        <Form.Control name="city" placeholder="Enter City Name" onChange={this.handleInput}/>
+                                                        <Form.Control name="city" placeholder="Enter City Name" value={this.state.basicInfo ? this.state.basicInfo.city : ''} onChange={this.handleInput} />
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col>
+                                                    <p>{this.state.bloading}</p>
                                                     </Col>
                                                     <Col>
                                                         <button className="mt-5 btn my-btn cbtn text-color float-right">Submit</button>
@@ -315,28 +402,28 @@ class CreateProfile extends React.Component {
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Add user name</Form.Label>
-                                                    <Form.Control name="profile_name" onChange={this.handleInput2}/>
+                                                    <Form.Control name="profile_name" onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.profile_name : ''}/>
                                                     <span>This is the second thing that others would see after your avatar. So please make sure it is catchy enough for others to remember eg.  Logoninja, Artistik, Quickart, etc..  Please avoid using your name here. </span>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Add your profile description</Form.Label>
-                                                    <Form.Control name="profile_description" onChange={this.handleInput2}/>
+                                                    <Form.Control name="profile_description" onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.profile_description : ''}/>
                                                     <span>This is the third thing that others would see next to your user name. This should briefely tell others on what do you have to offer.  eg. “modern logo designs in 24 hours”,“real hand painted artworks only”, “High quality video editing”. Max 50 alphabets. </span>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label>How would you define your design sensibility/ style</Form.Label>
-                                                    <Form.Control name="design_sensibility_style" as="textarea" rows={3} onChange={this.handleInput2}/>
+                                                    <Form.Control name="design_sensibility_style" as="textarea" rows={3} onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.design_sensibility_style : ''}/>
                                                     <span>We believe every designer has his/her own way of approaching design. Some make it arty, white others make it more detail oriented, etc...this data will help us in sharpening your profile and the getting you the right work.Max 300 words. </span>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Your design journey so far</Form.Label>
-                                                    <Form.Control name="design_journey" as="textarea" rows={3} onChange={this.handleInput2}/>
+                                                    <Form.Control name="design_journey" as="textarea" rows={3} onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.design_journey : ''}/>
                                                     <span>Brief description. max 600 words.</span>
                                                 </Col>
                                             </Row>
@@ -353,14 +440,14 @@ class CreateProfile extends React.Component {
                                 <div id="djourney-2" className="container tab-pane fade"><br />
                                     <h3 className="weight-600">Sahil Mahajan / Design Journey</h3>
                                     <div className="form-2 mt-2">
-                                        <Form>
+                                        <Form onSubmit={this.submitDesignJourney}>
                                             <h5 className='mt-3 mb-0'>What Categories do you design for</h5>
                                             <span>You can select more than one category also</span>
                                             <Row className='mt-2'>
                                                 {this.state.catArr.map((cat) => {
                                                     return (<Col sm={3} key={cat}>
                                                         <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input" id={cat.split(" ")[0]} name={cat} onChange={this.handleCheck} />
+                                                            <input type="checkbox" className="form-check-input" id={cat.split(" ")[0]} name={cat} onChange={this.handleCheck} checked={this.state.djourney.categories.split(",").includes(cat) ? "checked" : ""}/>
                                                             <label htmlFor={cat.split(" ")[0]} className='form-label'>{cat}</label>
                                                         </div>
                                                     </Col>)
@@ -368,7 +455,7 @@ class CreateProfile extends React.Component {
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <Form.Check type="checkbox" label="Others" />
+                                                    <Form.Check type="checkbox" name="categories" label="Others" onChange={this.handleOthers}/>
                                                 </Col>
                                             </Row>
                                             <h5 className='mt-3 mb-0'>Select the sub-categories you wish to offer your services in</h5>
@@ -388,20 +475,21 @@ class CreateProfile extends React.Component {
                                             <Row>
                                                 <Col>
                                                     <Form.Label><b>Personal Website</b></Form.Label>
-                                                    <Form.Control name="personal_website" onChange={this.handleInput2}/>
+                                                    <Form.Control name="personal_website" onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.personal_website : ''}/>
                                                     <span>Your home page, blog or company site.</span>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label><b>Portfolio URL</b></Form.Label>
-                                                    <Form.Control name="portfolio_urls" onChange={this.handleInput2}/>
-                                                    <span>Share your current online presence like Behance, Dribbble, etc.</span>
+                                                    <Form.Control name="portfolio_urls" onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.portfolio_urls : ''}/>
+                                                    <span>Share your current online presence like Behance, Dribbble, etc.(links separated by ",")</span>
                                                     <br />
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
+                                                <p>{this.state.cloading}</p>
                                                 </Col>
                                                 <Col>
                                                     <button className="mt-5 btn my-btn cbtn text-color float-right">Submit</button>

@@ -1,9 +1,13 @@
 import axios from "axios"
+var Cookies = require("js-cookie")
 export const uploadAvatar = (file) => {
     return new Promise((resolve, reject) => {
         var data = new FormData()
-        data.append('avatar', file)
-        axios.post("https://designmocha-dev.el.r.appspot.com/avatar-images", data)
+        data.append('pic', file)
+        var headers = {
+            session: JSON.stringify(Cookies.getJSON())
+        }
+        axios.post("https://designmocha-dev.el.r.appspot.com/public/profile/update-profile-pic", data, {headers: headers})
         .then((res) => {
             resolve(res)
         })

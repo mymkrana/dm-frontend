@@ -27,7 +27,7 @@ export const Routes = () => {
                     <Switch>
                         <Route exact path='/' component={App}></Route>
                         <Route exact path='/register' component={Register}></Route>
-                        <Route exact path='/login' component={Login}></Route>
+                        <Route path="/login" render={(props) => <Login {...props}/>}/>
                         <Route exact path='/reset-password' component={ForgotPass}></Route>
                         <Route path="/create-profile" render={(props) => <CreateProfile {...props}/>}/>
                     </Switch>

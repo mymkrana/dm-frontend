@@ -9,7 +9,6 @@ $(document).ready(function () {
     }
   })
   $(".scroll-down").click(function () {
-    console.log("scroll")
     var $container = $(".page-container");
     var $scrollTo = $('.sectione1');
     $container.animate({ scrollTop: $scrollTo.offset().top - $container.offset().top + $container.scrollTop(), scrollLeft: 0 }, 300);
@@ -32,3 +31,20 @@ $(document).ready(function () {
     };
   }
 })
+
+document.addEventListener("DOMContentLoaded", function(){
+  var dc = document.getElementsByClassName("wrapper")[0]
+  dc.addEventListener('scroll', function() {
+    console.log(dc.scrollTop)
+      if (dc.scrollTop > 50) {
+        document.getElementById('stickytop').classList.add('fixed-top');
+        // add padding top to show content behind navbar
+        navbar_height = document.querySelector('.sticky-top').offsetHeight;
+        document.body.style.paddingTop = navbar_height + 'px';
+      } else {
+        document.getElementById('stickytop').classList.remove('fixed-top');
+         // remove padding top from body
+        document.body.style.paddingTop = '0';
+      } 
+  });
+});

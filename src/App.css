@@ -277,6 +277,11 @@ footer p {
   padding: 20px 0;
   z-index: 999;
 }
+.slide-menu {
+  position: absolute;
+  right: 120px;
+  top: 60;
+}
 #site-header .container{
   min-height: auto;
   display: block;

@@ -35,9 +35,8 @@
 }
 .cprofile .avatar img{
     display: block;
-    width: 100%;
+    width: auto;
     height: 100%;
-    margin: 5px;
 }
 .cprofile .avatar {
     display: flex;
@@ -45,6 +44,8 @@
     width: 120px;
     margin: auto;
     height: 120px;
+    overflow: hidden;
+    border-radius: 50%;
 }
 /* .cprofile .col-sm-3 {
     flex: 0 0 25%;
@@ -149,7 +150,7 @@
     border-color: #BD5828;
     box-shadow: 0 0 0 0.2rem #bd57286b;
 }
-a.nav-link.active::before {
+.cprofile a.nav-link.active::before {
     content: " ";
     position: absolute;
     border: 1px solid white;

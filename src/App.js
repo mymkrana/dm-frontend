@@ -1,16 +1,26 @@
-import 'owl.carousel/dist/assets/owl.carousel.css';
-import 'owl.carousel/dist/assets/owl.theme.default.css';
+import React, { PureComponent } from 'react'
 import Footer from './component/Footer';
 import Header from './component/Header';
 import HomePage from './component/HomePage';
-function App() {
-  return (
-    <div className="App wrapper">
-      <Header />
-      <HomePage />
-      <Footer />
-    </div>
-  );
+class App extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+
+    }
+  }
+
+  render() {
+    return (
+      <div className="App wrapper">
+        <Header />
+        <HomePage />
+        <Footer />
+      </div>
+    )
+  }
 }
 
-export default App;
+export default App
+
