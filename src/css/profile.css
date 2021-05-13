@@ -242,3 +242,20 @@
     top: 0;
     opacity: 0;
   }
+.portfolio-data {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #BD5828;
+    margin-bottom: 20px;
+    background-color: #EAE1CB;
+}
+.myportfolios img {
+    width: 80px;
+}
+.pimg {
+    min-height: 80px;
+}
+.myportfolios .ptitle {
+    width: 95%;
+}

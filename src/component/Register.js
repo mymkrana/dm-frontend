@@ -54,6 +54,8 @@ class Register extends React.Component {
                 if (res.status === 201) {
                     await Cookies.remove("session")
                     await Cookies.remove("userProfile")
+                    var in60Minutes = 1/24;
+                    Cookies.set("username", this.state.username, {expires: in60Minutes})
                     this.setState({ successMessage: "Registration Successful", registered: true })
                 }
             }).catch((err) => {
