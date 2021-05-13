@@ -17,7 +17,7 @@ import { getPortfolioByUser } from '../services/getPortfolioByUser';
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none" };
+        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none" };
     }
     submitBasicProfile = async (e) => {
         e.preventDefault()
@@ -84,6 +84,9 @@ class CreateProfile extends React.Component {
         await this.setState({ isAuthenticated: auth })
         getProfile().then(async (res) => {
             var profile = { ...res.data }
+            if(profile.date_of_birth) {
+                profile.date_of_birth = profile.date_of_birth.split("T")[0]
+            }
             if (profile.first_name) {
                 await this.setState({ btn1: "Update" })
             }
@@ -155,19 +158,19 @@ class CreateProfile extends React.Component {
                 // await this.setState({ SubCat: SubCat })
             })
         getPortfolioByUser().then(async (res) => {
-            console.log("portfolio", res.data)
-            await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block" })
-            console.log("portfolio", this.state.portfolios[0].media_urls)
+            if(res.data[0].title) {
+                await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
+            }
         }).catch(err => {
             console.log("error", err.response)
         })
     }
     addPortfolio = () => {
         if (this.state.isportfolio === "none") {
-            this.setState({ isportfolio: "block" })
+            this.setState({ isportfolio: "block", pdisplay: "none" })
         }
         else {
-            this.setState({ isportfolio: "none" })
+            this.setState({ isportfolio: "none", pdisplay: "block" })
         }
 
     }
@@ -200,11 +203,10 @@ class CreateProfile extends React.Component {
             media: this.state.media
         }
         uploadPortfolio(data).then(res => {
-            console.log("portfolio uploaded")
             this.setState({ pmsg: "portfolio uploaded successfully" })
             getPortfolioByUser().then(async (res) => {
                 console.log("portfolio", res.data)
-                await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block" })
+                await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
                 console.log("portfolio", this.state.portfolios[0].media_urls)
             }).catch(err => {
                 console.log("error", err.response)
@@ -287,8 +289,14 @@ class CreateProfile extends React.Component {
     handleClose = () => {
         this.setState({ show: false })
     }
-    phandleShow = () => {
-        this.setState({ pshow: true })
+    phandleShow = async (e) => {
+        var vportfolio = {
+            title: e.target.getAttribute("data-title"),
+            description: e.target.getAttribute("data-desc"),
+            media: e.target.getAttribute("media").split(",")
+        }
+        await this.setState({ pshow: true, vportfolio: vportfolio})
+        console.log("media", this.state.media)
     }
     phandleClose = () => {
         this.setState({ pshow: false })
@@ -429,7 +437,7 @@ class CreateProfile extends React.Component {
                                         <h3 class="text-center mt-4">Upload your own</h3>
                                         <div className="d-flex justify-content-center text-center">
                                             <div class="upload-btn-wrapper">
-                                                <labbel class="btn my-btn ubtn text-color font-roboto" htmlFor="cupload">Upload a file</labbel>
+                                                <label class="btn my-btn ubtn text-color font-roboto" htmlFor="cupload">Upload a file</label>
                                                 <input type="file" name="myfile" id="cupload" onChange={this.selectFile} />
                                                 <p className="text-center font-roboto">{this.state.fileName}</p>
                                                 <p className="text-center">{this.state.fileError}</p>
@@ -641,20 +649,20 @@ class CreateProfile extends React.Component {
                                 <div id="mwork" className="container tab-pane fade"><br />
                                     <h3 className="weight-600">Designguru / My Work</h3>
                                     <p></p>
-                                    <div className="myportfolios mb-2">
+                                    <button className="mt-3 btn my-btn cbtn text-color float-right mb-2" style={{ display: this.state.addbtn }} onClick={this.addPortfolio}>Add Portfolio</button>
+                                    <div className="myportfolios mb-2" style={{display: this.state.pdisplay}}>
                                         {
                                             this.state.portfolios.map((portfolio) => {
                                                 return (
                                                     <div className='portfolio-data shadow w-100'>
                                                         <div className="pimg float-left p-2"><img src={portfolio.media_urls[0]} alt={portfolio.media_urls[0]} /></div>
                                                         <div className="ptitle float-left p-2"><h5>{portfolio.title}</h5></div>
-                                                        <i className="fa fa-pencil float-right" onClick={this.phandleShow}></i>
+                                                        <i className="fa fa-eye float-right" data-title={portfolio.title} data-desc={portfolio.description} media={portfolio.media_urls.join()} onClick={this.phandleShow}></i>
                                                     </div>
                                                 )
                                             })
                                         }
                                     </div>
-                                    <button className="mt-5 btn my-btn cbtn text-color float-right" style={{ display: this.state.addbtn }} onClick={this.addPortfolio}>Add Portfolio</button>
                                     <p>{this.state.pmsg}</p>
                                     <div className="form-4" style={{ display: this.state.isportfolio }}>
                                         <Form onSubmit={this.submitPortfolio}>
@@ -679,23 +687,22 @@ class CreateProfile extends React.Component {
                                                         <div>
                                                             {
                                                                 this.state.media.map((file) => {
-                                                                    return <img className="p-2" src={URL.createObjectURL(file)} alt={file.name} key={file.name} height="80px" width="auto" />
+                                                                    return <img className="p-2" src={file} alt={file.name} key={file.name} height="80px" width="auto" />
                                                                 })
                                                             }
                                                         </div>
-                                                        <labbel class="mt-2 p-2 btn my-btn cbtn text-color font-roboto" htmlFor="pupload">choose image</labbel>
+                                                        <label class="mt-2 p-2 btn my-btn cbtn text-color font-roboto" htmlFor="pupload">choose image</label>
                                                         <input type="file" name="myfile" id="pupload" onChange={this.selectPFile} multiple required />
                                                     </div>
                                                     <p className="text-center font-roboto">{this.state.pfileName}</p>
                                                     <p className="text-center">{this.state.pfileError}</p>
-                                                    <br /><br />
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                 </Col>
                                                 <Col>
-                                                    <button className="mt-5 btn my-btn cbtn text-color float-right">Submit</button>
+                                                    <button className="mb-2 btn my-btn cbtn text-color float-right">Submit</button>
                                                 </Col>
                                             </Row>
                                         </Form>
@@ -703,50 +710,48 @@ class CreateProfile extends React.Component {
                                 </div>
                                 <Modal show={this.state.pshow} onHide={this.phandleClose} centered size="lg" className="cmodal">
                                     <Modal.Header closeButton>
-                                        <Modal.Title className="cmtitle w-100 font-roboto">Edit Portfolio</Modal.Title>
+                                        <Modal.Title className="cmtitle w-100 font-roboto">Portfolio</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body>
                                     <Form onSubmit={this.submitPortfolio}>
                                             <Row>
                                                 <Col>
-                                                    <Form.Label>Write your portfilio title </Form.Label>
-                                                    <Form.Control name="title" onChange={this.portfolioInput} required />
-                                                    <span>Write your portfilio title </span>
+                                                    <Form.Label>Portfolio Title</Form.Label>
+                                                    <Form.Control name="title" value={this.state.vportfolio ? this.state.vportfolio.title : ''} onChange={this.portfolioInput} required readOnly/>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <Form.Label>Add your portfolio description</Form.Label>
-                                                    <Form.Control as="textarea" rows={5} name="description" onChange={this.portfolioInput} required />
-                                                    <span>Write your portfilio description </span>
+                                                    <Form.Label>Portfolio Description</Form.Label>
+                                                    <Form.Control as="textarea" rows={5} name="description" value={this.state.vportfolio ? this.state.vportfolio.description : ''} onChange={this.portfolioInput} required readOnly/>
                                                 </Col>
                                             </Row>
                                             <Row className='mt-3'>
                                                 <Col>
                                                     <div class="upload-btn-wrapper">
-                                                        <p>you can upload max 5 images</p>
+                                                        <p>Portfolio images</p>
                                                         <div>
                                                             {
-                                                                this.state.media.map((file) => {
-                                                                    return <img className="p-2" src={URL.createObjectURL(file)} alt={file.name} key={file.name} height="80px" width="auto" />
-                                                                })
+                                                                this.state.vportfolio ? (this.state.vportfolio.media.map((file) => {
+                                                                    return <img className="p-2" src={file} alt={file} key={file} height="80px" width="auto" />
+                                                                })) : ''
                                                             }
                                                         </div>
-                                                        <labbel class="mt-2 p-2 btn my-btn cbtn text-color font-roboto" htmlFor="pupload">choose image</labbel>
-                                                        <input type="file" name="myfile" id="pupload" onChange={this.selectPFile} multiple required />
+                                                        {/* <label class="mt-2 p-2 btn my-btn cbtn text-color font-roboto" htmlFor="pupload">choose image</label>
+                                                        <input type="file" name="myfile" id="pupload" onChange={this.selectPFile} multiple required /> */}
                                                     </div>
-                                                    <p className="text-center font-roboto">{this.state.pfileName}</p>
+                                                    {/* <p className="text-center font-roboto">{this.state.pfileName}</p>
                                                     <p className="text-center">{this.state.pfileError}</p>
-                                                    <br /><br />
+                                                    <br /><br /> */}
                                                 </Col>
                                             </Row>
-                                            <Row>
+                                            {/* <Row>
                                                 <Col>
                                                 </Col>
                                                 <Col>
                                                     <button className="mt-5 btn my-btn cbtn text-color float-right">Submit</button>
                                                 </Col>
-                                            </Row>
+                                            </Row> */}
                                         </Form>
                                     </Modal.Body>
                                 </Modal>
