@@ -17,7 +17,7 @@ import { getPortfolioByUser } from '../services/getPortfolioByUser';
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none" };
+        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none", phide: "block" };
     }
     submitBasicProfile = async (e) => {
         e.preventDefault()
@@ -88,7 +88,7 @@ class CreateProfile extends React.Component {
                 profile.date_of_birth = profile.date_of_birth.split("T")[0]
             }
             if (profile.first_name) {
-                await this.setState({ btn1: "Update" })
+                await this.setState({ btn1: "Update", phide: "none" })
             }
             if (profile.profile_name) {
                 await this.setState({ btn2: "Update" })
@@ -376,6 +376,9 @@ class CreateProfile extends React.Component {
         var username = 'SahilDesigns'
         if (this.props.location.state) {
             username = this.props.location.state.username;
+        }
+        if (this.state.basicInfo.profile_name) {
+            username = this.state.basicInfo.profile_name;
         }
         return (
             <div className="cprofile">
