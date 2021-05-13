@@ -259,3 +259,9 @@
 .myportfolios .ptitle {
     width: 100%;
 }
+.cmodal p {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+img {
+    cursor: pointer;
+}

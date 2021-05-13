@@ -14,6 +14,7 @@ import { getAuth } from '../services/getAuth';
 import Cookies from 'js-cookie';
 import { createProfile } from '../services/createProfile'
 import { getPortfolioByUser } from '../services/getPortfolioByUser';
+import { selectAvatar } from '../services/selectAvatar';
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
@@ -194,6 +195,25 @@ class CreateProfile extends React.Component {
         await this.setState({ djourney: djourney })
         console.log(this.state.djourney)
     }
+    selectAvatar = (e) => {
+        this.setState({fileError: "Please wait..."})
+        if(this.state.basicInfo.first_name) {
+            var user = {
+                photo_url: e.target.getAttribute("src")
+            }
+            selectAvatar(user)
+            .then((res) => {
+                this.setState({fileError: "Profile updated"})
+                this.setState({profileImg: e.target.getAttribute("src"), isAvatar: true})
+                this.handleClose()
+            }).catch((err) => {
+                this.setState({fileError: "something went wrong"})
+            })
+        }
+        else {
+            this.setState({fileError: "submit basic information first"})
+        }
+    }
     submitPortfolio = (e) => {
         this.setState({ pmsg: "Please wait..." })
         e.preventDefault()
@@ -284,7 +304,9 @@ class CreateProfile extends React.Component {
         }
     }
     handleShow = () => {
-        this.setState({ show: true })
+        if(this.state.basicInfo.first_name) {
+            this.setState({ show: true })
+        }
     }
     handleClose = () => {
         this.setState({ show: false })
@@ -433,7 +455,7 @@ class CreateProfile extends React.Component {
                                         <div className="default-av">
                                             {
                                                 this.state.avatars.map((avatar) => {
-                                                    return <img src={avatar} className="rounded-circle float-left mr-3" alt="avatar" width="80px" />
+                                                    return <img src={avatar} className="rounded-circle float-left mr-3" alt="avatar" width="80px" onClick={this.selectAvatar}/>
                                                 })
                                             }
                                         </div>
