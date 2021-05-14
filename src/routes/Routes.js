@@ -11,6 +11,8 @@ import {
 import Login from '../component/Login';
 import ForgotPass from '../component/ForgotPass';
 import CreateProfile from '../component/CreateProfile';
+import ExploreWork from '../component/ExploreWork';
+import PortfolioDetail from '../component/PortfolioDetail';
 function _ScrollToTop(props) {
     const { pathname } = useLocation();
     useEffect(() => {
@@ -29,6 +31,8 @@ export const Routes = () => {
                         <Route exact path='/register' component={Register}></Route>
                         <Route path="/login" render={(props) => <Login {...props}/>}/>
                         <Route exact path='/reset-password' component={ForgotPass}></Route>
+                        <Route exact path='/explore' component={ExploreWork}></Route>
+                        <Route exact path='/portfolio' component={PortfolioDetail}></Route>
                         <Route path="/create-profile" render={(props) => <CreateProfile {...props}/>}/>
                     </Switch>
                 </ScrollToTop>

@@ -255,7 +255,7 @@ span.flow {
     font-weight: 600;
 }
 
-::placeholder {
+.rsection input::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: red;
     opacity: 1;
@@ -269,7 +269,7 @@ span.flow {
     /* border: none; */
 }
 
-input::placeholder {
+.rsection input::placeholder {
     color: #AF4125!important;
 }
 

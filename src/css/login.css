@@ -216,7 +216,7 @@ span.flow {
     font-weight: 600;
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+.logsection input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: red;
     opacity: 1; /* Firefox */
   }
@@ -227,7 +227,7 @@ span.flow {
     /* color: antiquewhite; */
     /* border: none; */
 }
-input::placeholder {
+.logsection input::placeholder {
     color: #AF4125!important;
   }
   .logsection .form-control:focus {

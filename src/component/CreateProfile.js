@@ -29,7 +29,7 @@ class CreateProfile extends React.Component {
         console.log(this.state.isProfile)
         var basicProfile = { ...this.state.basicInfo }
         basicProfile = { first_name: basicProfile.first_name, last_name: basicProfile.last_name, email: basicProfile.email, mobile_number: basicProfile.mobile_number, gender: basicProfile.gender, country: basicProfile.country, state: basicProfile.state, city: basicProfile.city, address: basicProfile.address, date_of_birth: basicProfile.date_of_birth, pin_code: basicProfile.pin_code }
-        if (this.state.isProfile) {
+        if (this.state.isProfile === true) {
             basicProfile.profile_name = '';
             var d = new Date(basicProfile.date_of_birth)
             basicProfile.date_of_birth = d.toISOString()
@@ -103,12 +103,13 @@ class CreateProfile extends React.Component {
                 var country = this.state.countries.filter((country) => {
                     return profile.country === country.name
                 })
-                console.log("country", country)
                 var isoCode = country[0].isoCode
                 var states = await csc.getStatesOfCountry(isoCode)
                 await this.setState({ states: states })
-                getCategories()
+                if(profile.categories !== "Other") {
+                    getCategories()
                     .then(async (res) => {
+                        console.log("res", res)
                         await this.setState({ categories: res })
                         var catArr = []
                         for (let cat in res) {
@@ -128,9 +129,10 @@ class CreateProfile extends React.Component {
                         await this.setState({ SubCat: SubCat })
                         console.log(this.state.SubCat)
                     })
+                }
             }
         }).catch((err) => {
-            console.log(err.response.data)
+            console.log(err.response)
         })
         console.log("path name", this.props.location)
         var cavatars = await getAvatars()
@@ -138,6 +140,7 @@ class CreateProfile extends React.Component {
         await this.setState({ avatars: cavatars })
         var countries = csc.getAllCountries()
         await this.setState({ countries: countries })
+        
         getCategories()
             .then(async (res) => {
                 await this.setState({ categories: res })
@@ -146,17 +149,6 @@ class CreateProfile extends React.Component {
                     catArr.push(cat)
                 }
                 this.setState({ catArr: catArr })
-                // var SubCat = []
-                // console.log(this.state.djourney.categories.split(","))
-                // var scat =  this.state.djourney.categories.split(",")
-                // scat.map((cat) => {
-                //     this.state.categories[cat].map((subcat) => {
-                //         SubCat.push(subcat)
-                //         return subcat
-                //     })
-                //     return cat
-                // })
-                // await this.setState({ SubCat: SubCat })
             })
         getPortfolioByUser().then(async (res) => {
             if(res.data[0].title) {
@@ -233,7 +225,7 @@ class CreateProfile extends React.Component {
             })
         })
             .catch((err) => {
-                console.log("error", err.response.data)
+                console.log("error", err.response)
                 this.setState({ pmsg: "something went wrong" })
             })
     }
@@ -574,7 +566,7 @@ class CreateProfile extends React.Component {
                                         <Form>
                                             <Row>
                                                 <Col>
-                                                    <Form.Label>Add user name</Form.Label>
+                                                    <Form.Label>Add username</Form.Label>
                                                     <Form.Control name="profile_name" onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.profile_name : ''} />
                                                     <span>This is the second thing that others would see after your avatar. So please make sure it is catchy enough for others to remember eg.  Logoninja, Artistik, Quickart, etc..  Please avoid using your name here. </span>
                                                 </Col>
@@ -712,7 +704,7 @@ class CreateProfile extends React.Component {
                                                         <div>
                                                             {
                                                                 this.state.media.map((file) => {
-                                                                    return <img className="p-2" src={file} alt={file.name} key={file.name} height="80px" width="auto" />
+                                                                    return <img className="p-2" src={URL.createObjectURL(file)} alt={file.name} key={file.name} height="80px" width="auto" />
                                                                 })
                                                             }
                                                         </div>
