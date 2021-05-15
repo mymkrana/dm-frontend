@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function(){
         document.getElementById('stickytop').classList.add('fixed-top');
         // add padding top to show content behind navbar
         navbar_height = document.querySelector('.sticky-top').offsetHeight;
-        document.body.style.paddingTop = navbar_height + 'px';
+        // document.body.style.paddingTop = navbar_height + 'px';
       } else {
         document.getElementById('stickytop').classList.remove('fixed-top');
          // remove padding top from body
@@ -48,3 +48,20 @@ document.addEventListener("DOMContentLoaded", function(){
       } 
   });
 });
+// document.addEventListener("DOMContentLoaded", function(){
+//   var menu = document.getElementsByClassName("nav-toggle")[0];
+//   var slide = document.getElementsByClassName("slide-menu")[0]
+//   menu.addEventListener("click", function() {
+//     var width = slide.style.display;
+//     console.log(width)
+//     if(width == "none") {
+//       slide.style.display = "block";
+//       slide.style.maxWidth = "100%";
+//     }
+//     else {
+//       slide.style.display = "none";
+//       slide.style.maxWidth="0%";
+//     }
+
+//   })
+// })

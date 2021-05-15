@@ -7,7 +7,15 @@ import {LinkContainer} from 'react-router-bootstrap'
 class Header extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {mdisplay: 0, mwidth: 0};
+    }
+    menuToggle = () => {
+        if(this.state.mdisplay===0) {
+            this.setState({mdisplay: 100, mwidth: 100})
+        }
+        else {
+            this.setState({mdisplay: 0, mwidth: 0})
+        }
     }
     render() {
         return (
@@ -18,10 +26,10 @@ class Header extends React.Component {
                             <img src={siteLogo} alt="logo" />
                         </div>
                     </Link>
-                    <div className='nav-toggle'>
+                    <div className='nav-toggle' onClick={this.menuToggle}>
                         <img src={toggleMenu} alt="nav-menu" />
                     </div>
-                    <div className="slide-menu">
+                    <div className="slide-menu" style={{opacity: this.state.mdisplay, maxWidth: this.state.mwidth + "%"}}>
                             <Navbar id="basic-navbar-nav">
                                 <Nav className="mr-auto">
                                     <LinkContainer to="/">
@@ -33,7 +41,7 @@ class Header extends React.Component {
                                     <LinkContainer to="/dm-cafe">
                                         <Nav.Link className="text-color px-3">DM Cafe</Nav.Link>
                                     </LinkContainer>
-                                    <LinkContainer to="/">
+                                    <LinkContainer to="/about-us">
                                         <Nav.Link className="text-color px-3">About Us</Nav.Link>
                                     </LinkContainer>
                                     <LinkContainer to="/">

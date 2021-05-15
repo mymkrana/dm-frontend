@@ -6,66 +6,184 @@ import { Card } from 'react-bootstrap'
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
+import { getPortfolioById } from '../services/getPortfolioById'
+import { Link, Redirect } from 'react-router-dom'
+import { getAuth } from '../services/getAuth'
+import { getProfileById } from '../services/getProfileById'
+import { getPortfolios } from '../services/getPortfolios'
 class PortfolioDetail extends PureComponent {
     constructor(props) {
         super(props)
 
         this.state = {
-            isAthenticated: false
+            isAthenticated: false,
+            portfolio: {},
+            portfolios: [],
+            media: [],
+            uid: '',
+            user: {}
         }
     }
+    async componentDidMount() {
+        var auth = getAuth()
+        this.setState({ isAuthenticated: auth })
+        var pid = this.props.match.params.id;
+        getPortfolioById(pid).then(async (res) => {
+            console.log(res.data)
+            await this.setState({ portfolio: res.data, media: res.data.media_urls })
+            getPortfolios()
+            .then((res) => {
+                var portfolios = []
+                res.data.map((user) => {
+                    for (let key in user) {
+                        user[key].map((portfolio) => {
+                            portfolio.uid = key;
+                            portfolios.push(portfolio)
+                            return true
+                        })
+                    }
+                    return true
+                })
+                this.setState({ portfolios: portfolios })
+                portfolios.map((portfolio) => {
+                    if(portfolio.portfolio_id === this.state.portfolio.portfolio_id) {
+                        var nportfolio = {...this.state.portfolio}
+                        nportfolio.uid = portfolio.uid
+                        getProfileById(res.data.uid).then((res) => {
+                            this.setState({user: res.data})
+                        }).catch((err) => {
+                            this.setState({isAthenticated: false})
+                        })
+                    }
+                    return true
+                })
+            }).catch((err) => {
+                this.setState({ error: "something went wrong", isAthenticated: false })
+            })
+        }).catch((error) => {
+            console.log("err", error.response)
+            this.setState({ isAthenticated: false })
+        })
+    }
     render() {
+        if (this.state.isAuthenticated === false) {
+            return <Redirect
+                to={{
+                    pathname: "/login",
+                    state: { redirect: true, rpath: this.props.location.pathname }
+                }}
+            />
+        }
         return (
             <div className="portfolio-details">
                 <Header />
-                <div className="user-detail mt-3 container">
+                <div className="user-detail mt-3 container-fluid">
                     <Card>
                         <Card.Body>
                             <div className="user-flex py-3">
-                                <div className="user-av"><i className="fa fa-user fa-2x"></i></div>
-                                <div><h2 className="font-arial"><b className="font-arial">Designguru</b></h2></div>
+                                <div className="user-av rounded-circle"><img alt="profile" src={this.state.user.photo_url} /></div>
+                                <div><h2 className="font-arial"><b className="font-arial">{this.state.user.profile_name}</b></h2></div>
                                 <p className="font-arial">Logo and Graphic Designers</p>
                                 <div className="mt-4">
                                     <h5 className="text-center"><b className="font-arial">Design for me is :</b></h5>
-                                    <p className="font-arial text-center">Lorem Ipsum is simply dummy text of the printing and typesetting industry.<br /> Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                                    <p className="font-arial text-center">{this.state.user.design_journey}</p>
                                 </div>
                                 <div className="mt-4">
                                     <h5 className="text-center"><b className="font-arial">Areas of Expertise :</b></h5>
-                                    <p className="font-arial text-center">Logo Design, Brand Style Guides, Brochure Design, Book Cover Design, Catalog Design,<br />resentation Design, Infographic Design, Logo Animations.</p>
+                                    <p className="font-arial text-center expertise">{this.state.user.sub_category}</p>
                                 </div>
                                 <div className="poptions">
                                     <i className="fa fa-lightbulb-o px-2 float-left pt-1 fa-2x"></i><p className="font-arial float-left pr-3">0</p>
-                                    <i className="fa fa-eye px-2 float-left pt-1 fa-2x"></i><p className="font-arial float-left pr-3">0</p>
-                                    <i className="fa fa-heart px-2 float-left pt-1 fa-2x"></i><p className="font-arial float-left pr-3">0</p>
+                                    <i className="fa fa-eye px-2 float-left pt-1 fa-2x"></i><p className="font-arial float-left pr-3">{this.state.portfolio.views}</p>
+                                    <i className="fa fa-heart px-2 float-left pt-1 fa-2x"></i><p className="font-arial float-left pr-3">{this.state.portfolio.likes}</p>
                                 </div>
                             </div>
                         </Card.Body>
                     </Card>
                 </div>
-                <div className="container portfolio-info mt-4">
-                    <div className="row pflex">
+                <div className="container-fluid portfolio-info mt-4">
+                    <div className="row pflex row-eq-height">
                         <div className="col-sm-8 col">
                             <OwlCarousel className='owl-theme' loop margin={10} items={1} nav autoplay>
-                                <div className='item'>
-                                    <h4>1</h4>
-                                </div>
-                                <div className='item'>
-                                    <h4>2</h4>
-                                </div>
-                                <div className='item'>
-                                    <h4>3</h4>
-                                </div>
-                                <div className='item'>
-                                    <h4>4</h4>
-                                </div>
+                                {
+                                    this.state.media.map((img) => {
+                                        return (
+                                            <div className='item'>
+                                                <div className="pdimg">
+                                                    <img alt="pimg" src={img}></img>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
                             </OwlCarousel>
                         </div>
-                        <div className="col-sm-4 col pdesc">
-                            Lorem Ipsum is simply dummy
-                            text of the printing and typesetting industry.
-                            Lorem Ipsum has been the industry's standard
-                            dummy text ever since the 1500s,
+                        <div className="col-sm-4 col pdesc font-arial">
+                            {this.state.portfolio.description}
                         </div>
+                    </div>
+                </div>
+                <div className="container-fluid more-posts mborder mt-5 py-4">
+                    <div className="mheader">
+                        <h3 className="font-arial mb-3 float-left">More from Designguru</h3>
+                        <p className="font-arial float-right">Veiw more &gt;</p>
+                    </div>
+                    <div className="row ml-0">
+                        <div className="col-sm-3">
+                            <Card>
+                                <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src="" width="100%" /></Card.Body>
+                            </Card>
+                        </div>
+                        <div className="col-sm-3">
+                            <Card>
+                                <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src="" width="100%" /></Card.Body>
+                            </Card>
+                        </div>
+                        <div className="col-sm-3">
+                            <Card>
+                                <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src="" width="100%" /></Card.Body>
+                            </Card>
+                        </div>
+                        <div className="col-sm-3">
+                            <Card>
+                                <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src="" width="100%" /></Card.Body>
+                            </Card>
+                        </div>
+                    </div>
+                    <button className="cbtn btn my-btn mt-5 text-color font-arial">connect with me</button>
+                </div>
+                <div className="container-fluid more-posts mtrans mt-5">
+                    <div className="mheader">
+                        <h3 className="font-arial mb-3 float-left">You might also like</h3>
+                        <p className="font-arial float-right"><Link to="/explore">Veiw more &gt;</Link></p>
+                    </div>
+                    <div className="row ml-0">
+                        {
+                            this.state.portfolios.slice(0, 4).map((portfolio) => {
+                                return (
+                                    <div className="col-sm-3">
+                                        <Link to={"/portfolio/" + portfolio.portfolio_id} >
+                                        <Card>
+                                            <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src={portfolio.media_urls[0]} width="100%" /></Card.Body>
+                                        </Card>
+                                        <Card.Footer className="px-0">
+                                            <div className="emeta">
+                                                <div className="euser">
+                                                    <i className="fa fa-user px-2 float-left pt-1"></i><p className="font-arial float-left">Designmocha</p>
+                                                </div>
+                                                <div className="eoptions">
+                                                    <i className="fa fa-lightbulb-o px-2 float-left pt-1"></i><p className="font-arial float-left">0</p>
+                                                    <i className="fa fa-eye px-2 float-left pt-1"></i><p className="font-arial float-left">{portfolio.views}</p>
+                                                    <i className="fa fa-heart px-2 float-left pt-1"></i><p className="font-arial float-left">{portfolio.likes}</p>
+                                                    <i className="fa fa-comment px-2 float-left pt-1"></i><p className="font-arial float-left">0</p>
+                                                </div>
+                                            </div>
+                                        </Card.Footer>
+                                        </Link>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
                 <Footer />

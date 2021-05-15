@@ -4,6 +4,8 @@ import Footer from './Footer'
 import Header from './Header'
 import { Card, Form, Nav } from 'react-bootstrap'
 import { getPortfolios } from '../services/getPortfolios'
+import { getAuth } from '../services/getAuth'
+import {Link, Redirect} from 'react-router-dom'
 class ExploreWork extends PureComponent {
     constructor(props) {
         super(props)
@@ -14,6 +16,13 @@ class ExploreWork extends PureComponent {
         }
     }
     componentDidMount() {
+        var auth = getAuth()
+        if(auth === false) {
+            this.setState({isAuthenticated: "false"}) 
+        }
+        else {
+            this.setState({isAuthenticated: true})
+        }
         getPortfolios()
             .then((res) => {
                 var portfolios = []
@@ -34,6 +43,14 @@ class ExploreWork extends PureComponent {
             })
     }
     render() {
+        if (this.state.isAuthenticated==="false") {
+            return <Redirect
+                to={{
+                    pathname: "/login",
+                    state: { redirect: true, rpath: this.props.location.pathname }
+                }}
+            />
+        }
         return (
             <div className="ework">
                 <Header />
@@ -81,7 +98,8 @@ class ExploreWork extends PureComponent {
                             {
                                 this.state.portfolios.map((portfolio) => {
                                     return (
-                                        <div className="col-sm-3">
+                                        <div className="col-sm-3 mb-2">
+                                            <Link to={"/portfolio/" + portfolio.portfolio_id} >
                                             <Card>
                                                 <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src={portfolio.media_urls[0]} width="100%"/></Card.Body>
                                             </Card>
@@ -98,6 +116,7 @@ class ExploreWork extends PureComponent {
                                                     </div>
                                                 </div>
                                             </Card.Footer>
+                                            </Link>
                                         </div>
                                     )
                                 })

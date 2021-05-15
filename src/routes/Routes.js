@@ -13,6 +13,9 @@ import ForgotPass from '../component/ForgotPass';
 import CreateProfile from '../component/CreateProfile';
 import ExploreWork from '../component/ExploreWork';
 import PortfolioDetail from '../component/PortfolioDetail';
+import TermsConditions from '../component/TermsConditions';
+import AboutUs from '../component/AboutUs';
+import Faq from '../component/Faq';
 function _ScrollToTop(props) {
     const { pathname } = useLocation();
     useEffect(() => {
@@ -32,7 +35,10 @@ export const Routes = () => {
                         <Route path="/login" render={(props) => <Login {...props}/>}/>
                         <Route exact path='/reset-password' component={ForgotPass}></Route>
                         <Route exact path='/explore' component={ExploreWork}></Route>
-                        <Route exact path='/portfolio' component={PortfolioDetail}></Route>
+                        <Route exact path="/portfolio/:id" component={PortfolioDetail}></Route>
+                        <Route exact path='/about-us' component={AboutUs}></Route>
+                        <Route exact path='/faq' component={Faq}></Route>
+                        <Route exact path='/terms-and-conditions' component={TermsConditions}></Route>
                         <Route path="/create-profile" render={(props) => <CreateProfile {...props}/>}/>
                     </Switch>
                 </ScrollToTop>

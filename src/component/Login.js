@@ -44,8 +44,8 @@ class Login extends React.Component {
                     // cookies.set("authenticated", response.data.authenticated, { maxAge: 3600 })
                     cookies.set("userProfile", response.data.userProfile, { maxAge: 3600, secure:true, sameSite:"none" })
                     await this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
-                    if(this.props.location.state) {
-                        this.setState({Redirect: true})
+                    if(this.props.location.state.redirect) {
+                        await this.setState({Redirect: true})
                     }
                 })
                 .catch((err) => {
@@ -68,9 +68,9 @@ class Login extends React.Component {
         })
     }
     render() {
-        if((this.state.isloggedin) && (this.state.Redirect === false)) {
-            return <Redirect to='/' />
-        }
+        // if((this.state.Redirect===false) && (this.state.isloggedin===true)) {
+        //     return <Redirect to='/' />
+        // }
         if(this.state.Redirect) {
             return <Redirect to={this.props.location.state.rpath} />
         }
