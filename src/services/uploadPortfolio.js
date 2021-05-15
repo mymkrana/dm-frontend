@@ -6,7 +6,11 @@ export const uploadPortfolio = (data) => {
         // data.append('pic', file)
         var pdata = new FormData()
         pdata.append("portfolio_metadata", data.portfolio_metadata)
-        pdata.append("media", data.media[0])
+        data.media.map((media) => {
+            pdata.append("media", media)
+            return true
+        })
+        
         var headers = {
             session: JSON.stringify(Cookies.getJSON())
         }

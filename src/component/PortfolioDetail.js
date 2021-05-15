@@ -76,7 +76,7 @@ class PortfolioDetail extends PureComponent {
             />
         }
         return (
-            <div className="portfolio-details">
+            <div className="portfolio-details wrapper">
                 <Header />
                 <div className="user-detail mt-3 container-fluid">
                     <Card>

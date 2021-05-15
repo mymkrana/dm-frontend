@@ -29,7 +29,7 @@ class CreateProfile extends React.Component {
         console.log(this.state.isProfile)
         var basicProfile = { ...this.state.basicInfo }
         basicProfile = { first_name: basicProfile.first_name, last_name: basicProfile.last_name, email: basicProfile.email, mobile_number: basicProfile.mobile_number, gender: basicProfile.gender, country: basicProfile.country, state: basicProfile.state, city: basicProfile.city, address: basicProfile.address, date_of_birth: basicProfile.date_of_birth, pin_code: basicProfile.pin_code }
-        if (this.state.isProfile === true) {
+        if ((this.state.isProfile === "true") || (this.state.isProfile === true)) {
             basicProfile.profile_name = '';
             var d = new Date(basicProfile.date_of_birth)
             basicProfile.date_of_birth = d.toISOString()
@@ -167,6 +167,9 @@ class CreateProfile extends React.Component {
         }
 
     }
+    clearMessage = () => {
+        this.setState({cloading: "", bloading:"", pmsg: ""})
+    }
     handleInput = async (e) => {
         var basicInfo = { ...this.state.basicInfo }
         basicInfo[e.target.name] = e.target.value
@@ -209,7 +212,7 @@ class CreateProfile extends React.Component {
     submitPortfolio = (e) => {
         this.setState({ pmsg: "Please wait..." })
         e.preventDefault()
-        console.log(this.state.media)
+        console.log("length", this.state.media.length)
         var data = {
             portfolio_metadata: JSON.stringify(this.state.portfolio),
             media: this.state.media
@@ -417,19 +420,19 @@ class CreateProfile extends React.Component {
                             <div className='ptabs' id='ptabs'>
                                 <ul className="nav nav-pills" role="tablist">
                                     <li className="nav-item">
-                                        <a className="nav-link active text-color" data-toggle="pill" href="#pbasic">Profile Basics</a>
+                                        <a className="nav-link active text-color" data-toggle="pill" href="#pbasic" onClick={this.clearMessage}>Profile Basics</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link text-color" data-toggle="pill" href="#djourney">Design journey</a>
+                                        <a className="nav-link text-color" data-toggle="pill" href="#djourney" onClick={this.clearMessage}>Design journey</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link text-color" data-toggle="pill" href="#mwork">My Work</a>
+                                        <a className="nav-link text-color" data-toggle="pill" href="#mwork" onClick={this.clearMessage}>My Work</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link text-color" data-toggle="pill" href="#vprofile">Apply for Verification</a>
+                                        <a className="nav-link text-color" data-toggle="pill" href="#vprofile" onClick={this.clearMessage}>Apply for Verification</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link text-color" data-toggle="pill" href="#pstatus">Profile Status</a>
+                                        <a className="nav-link text-color" data-toggle="pill" href="#pstatus" onClick={this.clearMessage}>Profile Status</a>
                                     </li>
                                     <li className="nav-item">
                                         <a className="nav-link text-color" data-toggle="pill" href="#bpayment">Billing & Payment</a>
@@ -674,7 +677,7 @@ class CreateProfile extends React.Component {
                                                     <div className='portfolio-data shadow w-100'>
                                                         <div className="pimg float-left p-2"><img src={portfolio.media_urls[0]} alt={portfolio.media_urls[0]} /></div>
                                                         <div className="ptitle float-left p-2"><h5>{portfolio.title}</h5></div>
-                                                        <i className="fa fa-eye float-right" data-title={portfolio.title} data-desc={portfolio.description} media={portfolio.media_urls.join()} onClick={this.phandleShow}></i>
+                                                        <i className="fa fa-eye float-right" data-title={portfolio.title} data-desc={portfolio.description} media={portfolio.media_urls} onClick={this.phandleShow}></i>
                                                     </div>
                                                 )
                                             })

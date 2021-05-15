@@ -129,11 +129,7 @@
     border: 1.5px solid #808080;
     color: #878787 !important;
 }
-.cprofile .form-control:focus {
-    background-color: #dfd8cf00;
-    border: 1.5px solid #808080;
-    color: #878787 !important;
-}
+
 .cprofile label.form-label {
     color: #606060;
     margin-bottom: 2px;
@@ -147,8 +143,8 @@
 }
 .cprofile .form-control:focus {
     color: #878787 !important;
-    border-color: #BD5828;
-    box-shadow: 0 0 0 0.2rem #bd57286b;
+    border-color: black;
+    box-shadow: none;
 }
 .cprofile a.nav-link.active::before {
     content: " ";

@@ -901,3 +901,34 @@ footer .nav-link {
 .App #site-header a{
   color: #EAE1CB !important;
 }
+.footer a:hover {
+  color: black !important;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+background-color: transparent !important;
+-webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+.logsection input:-webkit-autofill,
+.logsection input:-webkit-autofill:hover, 
+.logsection input:-webkit-autofill:focus,
+.logsection textarea:-webkit-autofill,
+.logsection textarea:-webkit-autofill:hover,
+.logsection textarea:-webkit-autofill:focus,
+.logsection select:-webkit-autofill,
+.logsection select:-webkit-autofill:hover,
+.logsection select:-webkit-autofill:focus {
+background-color: transparent !important;
+-webkit-box-shadow: 0 0 0 30px #231f20 inset !important;
+-webkit-text-fill-color: #BD5828;
+}
+.pace .pace-progress:after {
+  font-family: 'Athelas' !important;
+}

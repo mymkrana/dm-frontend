@@ -16,11 +16,15 @@ class HomePage extends React.Component {
         getAuth()
         const script = document.createElement("script");
         script.src = "/scripts/home.js";
-        script.async = true;
+        script.async = false;
         document.body.appendChild(script);
+        const mscript = document.createElement("script");
+        mscript.src = "/scripts/main.js";
+        mscript.async = false;
+        document.body.appendChild(mscript);
         const pscript = document.createElement("script");
         pscript.src = "/scripts/pace.min.js";
-        pscript.async = true;
+        pscript.async = false;
         document.body.appendChild(pscript);
     }
     render() {

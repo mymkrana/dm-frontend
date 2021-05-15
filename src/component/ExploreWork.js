@@ -51,7 +51,7 @@ class ExploreWork extends PureComponent {
             />
         }
         return (
-            <div className="ework">
+            <div className="ework wrapper">
                 <Header />
                 <div className="e-content">
                     <div className="top-banner">

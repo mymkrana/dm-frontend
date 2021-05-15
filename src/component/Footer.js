@@ -37,9 +37,9 @@ class Footer extends React.Component {
                             <div className="col-sm-4 pleft">
                                 <h4>Follow Us</h4>
                                 <Nav className="flex-column">
-                                    <div className="vmiddle"><Nav.Link href="/instagram" className="text-color"><img src={instaimg} alt="instagram" className="social"></img>Instagram</Nav.Link></div>
-                                    <div className="vmiddle"><Nav.Link href="/twitter" className="text-color"><img src={twitterimg} alt="twitter" className="social"></img>Twitter</Nav.Link></div>
-                                    <div className="vmiddle"><Nav.Link href="/facebook" className="text-color"><img src={fbimg} alt="facebook" className="social"></img>Facebook</Nav.Link></div>
+                                    <div className="vmiddle"><Nav.Link href="/instagram" className="text-color"><i className="fa fa-instagram"></i>Instagram</Nav.Link></div>
+                                    <div className="vmiddle"><Nav.Link href="/twitter" className="text-color"><i alt="twitter" className="fa fa-twitter"></i>Twitter</Nav.Link></div>
+                                    <div className="vmiddle"><Nav.Link href="/facebook" className="text-color"><i className="fa fa-facebook"></i>Facebook</Nav.Link></div>
                                 </Nav>
                             </div>
                         </div>

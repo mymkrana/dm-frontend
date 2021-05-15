@@ -91,16 +91,16 @@ class Login extends React.Component {
                             </div>
                             <div className="col-sm-6 form">
                                 <div className="lflex">
-                                    <form onSubmit={this.formSubmit}>
+                                    <form onSubmit={this.formSubmit} autoComplete="off">
                                         {!this.state.successMessage ? '' : (<p className="text-color">{this.state.successMessage}</p>)}
                                         {!this.state.isloading ? '' : (<p className="text-color">Loading please wait..</p>)}
                                         <div className="form-group">
                                             <label htmlFor="exampleInputEmail1" className="fotmlab">EMAIL ADDRESS</label>
-                                            <input type="text" name='email' className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="jdoe123@gmail.com" onChange={this.handleChange} required />
+                                            <input type="text" autoComplete="off" name='email' className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="jdoe123@gmail.com" onChange={this.handleChange} required />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="exampleInputPassword1" className="fotmlab">PASSWORD</label>
-                                            <input type="password" name='password' className="form-control" id="exampleInputPassword1" placeholder="*********" onChange={this.handleChange} required />
+                                            <input type="password" autoComplete="new password" name='password' className="form-control" id="exampleInputPassword1" placeholder="*********" onChange={this.handleChange} required />
                                         </div><br />
                                         <button type="submit" className="btn form" disabled={this.state.isloading}>Login</button>
                                         <Link to="/register" className="btn form a">If you haven't member </Link>
