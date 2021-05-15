@@ -29,7 +29,6 @@ class PortfolioDetail extends PureComponent {
         this.setState({ isAuthenticated: auth })
         var pid = this.props.match.params.id;
         getPortfolioById(pid).then(async (res) => {
-            console.log(res.data)
             await this.setState({ portfolio: res.data, media: res.data.media_urls })
             getPortfolios()
             .then((res) => {
@@ -45,23 +44,25 @@ class PortfolioDetail extends PureComponent {
                     return true
                 })
                 this.setState({ portfolios: portfolios })
+                console.log(this.state.portfolio.portfolio_id)
                 portfolios.map((portfolio) => {
-                    if(portfolio.portfolio_id === this.state.portfolio.portfolio_id) {
+                    if(this.state.portfolio.portfolio_id === portfolio.portfolio_id) {
                         var nportfolio = {...this.state.portfolio}
                         nportfolio.uid = portfolio.uid
-                        getProfileById(res.data.uid).then((res) => {
-                            this.setState({user: res.data})
-                        }).catch((err) => {
-                            this.setState({isAthenticated: false})
-                        })
+                        this.setState({uid: portfolio.uid, portfolio:nportfolio})
                     }
                     return true
+                })
+                getProfileById(this.state.uid).then(async (res) => {
+                    await this.setState({user: res.data})
+                    console.log(this.state.user)
+                }).catch((err) => {
+                    this.setState({isAthenticated: false})
                 })
             }).catch((err) => {
                 this.setState({ error: "something went wrong", isAthenticated: false })
             })
         }).catch((error) => {
-            console.log("err", error.response)
             this.setState({ isAthenticated: false })
         })
     }
@@ -162,7 +163,7 @@ class PortfolioDetail extends PureComponent {
                             this.state.portfolios.slice(0, 4).map((portfolio) => {
                                 return (
                                     <div className="col-sm-3">
-                                        <Link to={"/portfolio/" + portfolio.portfolio_id} >
+                                        <a href={"/portfolio/" + portfolio.portfolio_id} >
                                         <Card>
                                             <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src={portfolio.media_urls[0]} width="100%" /></Card.Body>
                                         </Card>
@@ -179,7 +180,7 @@ class PortfolioDetail extends PureComponent {
                                                 </div>
                                             </div>
                                         </Card.Footer>
-                                        </Link>
+                                        </a>
                                     </div>
                                 )
                             })

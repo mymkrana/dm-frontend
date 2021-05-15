@@ -15,7 +15,7 @@ class Login extends React.Component {
         super(props);
         this.state = {
             isloggedin: false,
-            Redirect: false
+            Redirect: "false"
         };
     }
     handleChange = async (e) => {
@@ -43,10 +43,12 @@ class Login extends React.Component {
                     cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none"})
                     // cookies.set("authenticated", response.data.authenticated, { maxAge: 3600 })
                     cookies.set("userProfile", response.data.userProfile, { maxAge: 3600, secure:true, sameSite:"none" })
-                    await this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
-                    if(this.props.location.state.redirect) {
-                        await this.setState({Redirect: true})
+                    if(this.props.location.state) {
+                        if(this.props.location.state.redirect) {
+                            await this.setState({Redirect: "true"})
+                        }
                     }
+                    await this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
                 })
                 .catch((err) => {
                     console.log(err)
@@ -68,10 +70,13 @@ class Login extends React.Component {
         })
     }
     render() {
-        // if((this.state.Redirect===false) && (this.state.isloggedin===true)) {
-        //     return <Redirect to='/' />
-        // }
-        if(this.state.Redirect) {
+        if(this.state.Redirect==="false") {
+            console.log(this.state.Redirect)
+            if(this.state.isloggedin===true) {
+                return <Redirect to='/create-profile' />
+            }
+        }
+        if(this.state.Redirect!=="false") {
             return <Redirect to={this.props.location.state.rpath} />
         }
         return (

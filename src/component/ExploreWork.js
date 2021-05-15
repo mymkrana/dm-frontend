@@ -5,11 +5,10 @@ import Header from './Header'
 import { Card, Form, Nav } from 'react-bootstrap'
 import { getPortfolios } from '../services/getPortfolios'
 import { getAuth } from '../services/getAuth'
-import {Link, Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 class ExploreWork extends PureComponent {
     constructor(props) {
         super(props)
-
         this.state = {
             portfolios: [],
             isAuthenticated: false
@@ -99,7 +98,7 @@ class ExploreWork extends PureComponent {
                                 this.state.portfolios.map((portfolio) => {
                                     return (
                                         <div className="col-sm-3 mb-2">
-                                            <Link to={"/portfolio/" + portfolio.portfolio_id} >
+                                            <a href={"/portfolio/" + portfolio.portfolio_id} >
                                             <Card>
                                                 <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src={portfolio.media_urls[0]} width="100%"/></Card.Body>
                                             </Card>
@@ -116,7 +115,7 @@ class ExploreWork extends PureComponent {
                                                     </div>
                                                 </div>
                                             </Card.Footer>
-                                            </Link>
+                                            </a>
                                         </div>
                                     )
                                 })
