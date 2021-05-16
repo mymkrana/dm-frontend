@@ -562,13 +562,16 @@ footer .nav-link {
 .sectione2 .heading-2 {
   margin: auto;
 }
+.nav-close {
+  display: none;
+}
 /* Responsive CSS */
 @media only screen and (max-width: 1920px) {
   .full-height {
     min-height: 700px !important;
   }
   .parallax::after {
-    transform: translateZ(-0.5px) scale(1.6);
+    transform: translateZ(-0.7px) scale(1.6);
   }
 }
 @media only screen and (max-width: 1024px) {
@@ -579,11 +582,31 @@ footer .nav-link {
     min-height: 600px !important;
   }
   .parallax::after {
-    transform: translateZ(-0.5px) scale(1.6);
+    transform: translateZ(-0.6px) scale(1.6);
   }
 }
 @media only screen and (max-width: 768px) {
-
+  .nav-close {
+    display: block;
+    padding-top: 10px;
+  }
+  .nav-close i {
+    color: #BD5828;
+    font-weight: 300;
+  }
+  .slide-menu {
+    width: 100%;
+    top: 0;
+    right: 0;
+    background-color: #EAE1CB;
+  }
+  .wrapper #stickytop #site-header a {
+    color: #BD5828 !important;
+}
+  .navbar-expand .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+}
   .section-three, .section-three2, .section-five {
     padding-top: 170px;
     padding-bottom: 170px;
@@ -931,4 +954,12 @@ background-color: transparent !important;
 }
 .pace .pace-progress:after {
   font-family: 'Athelas' !important;
+}
+.pbanner {
+  background-image: url(./images/portfolio.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.pbanner .col-sm-6 {
+  padding-left: 40px;
 }

@@ -20,7 +20,7 @@ class AboutUs extends PureComponent {
                 <div className="abanner top-banner">
                         <div className="row">
                             <div className="col-sm-4">
-                                <div className="container-fluid"><h3>OUR TEAM</h3></div>
+                                <div className="container-fluid"><h3>The team</h3></div>
                             </div>
                         </div>
                     </div>

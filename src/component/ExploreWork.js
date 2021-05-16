@@ -53,14 +53,14 @@ class ExploreWork extends PureComponent {
         return (
             <div className="ework wrapper">
                 <Header />
-                <div className="e-content">
-                    <div className="top-banner">
+                <div className="top-banner pbanner">
                         <div className="row">
-                            <div className="col-sm-4">
+                            <div className="col-sm-6">
                                 <div className="container-fluid"><h3>Discover India's best design &amp; creative talent</h3></div>
                             </div>
                         </div>
                     </div>
+                <div className="e-content">
                     <div className="top-filters mt-5 mb-5 px-5">
                         <div className="efilters">
                             <Form.Control as="select" defaultValue="Choose..." className="font-arial">

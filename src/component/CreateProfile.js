@@ -26,7 +26,6 @@ class CreateProfile extends React.Component {
         var basicInfo = { ...this.state.basicInfo }
         basicInfo.full_name = basicInfo.first_name + " " + basicInfo.last_name
         await this.setState({ basicInfo: basicInfo })
-        console.log(this.state.isProfile)
         var basicProfile = { ...this.state.basicInfo }
         basicProfile = { first_name: basicProfile.first_name, last_name: basicProfile.last_name, email: basicProfile.email, mobile_number: basicProfile.mobile_number, gender: basicProfile.gender, country: basicProfile.country, state: basicProfile.state, city: basicProfile.city, address: basicProfile.address, date_of_birth: basicProfile.date_of_birth, pin_code: basicProfile.pin_code, full_name: basicProfile.full_name }
         if ((this.state.isProfile === "true") || (this.state.isProfile === true)) {
@@ -80,7 +79,6 @@ class CreateProfile extends React.Component {
     }
     async componentDidMount() {
         await this.setState({ isProfile: Cookies.get("userProfile") })
-        console.log(this.state.isProfile)
         var auth = getAuth()
         await this.setState({ isAuthenticated: auth })
         getProfile().then(async (res) => {
@@ -98,7 +96,6 @@ class CreateProfile extends React.Component {
                 await this.setState({ profileImg: profile.photo_url, isAvatar: true })
             }
             await this.setState({ basicInfo: profile, profileImg: profile.photo_url, djourney: profile })
-            console.log(this.state.basicInfo)
             if (profile.country) {
                 var country = this.state.countries.filter((country) => {
                     return profile.country === country.name
@@ -109,7 +106,6 @@ class CreateProfile extends React.Component {
                 if(profile.categories !== "Other") {
                     getCategories()
                     .then(async (res) => {
-                        console.log("res", res)
                         await this.setState({ categories: res })
                         var catArr = []
                         for (let cat in res) {
@@ -117,7 +113,6 @@ class CreateProfile extends React.Component {
                         }
                         this.setState({ catArr: catArr })
                         var SubCat = []
-                        console.log(this.state.djourney.categories.split(","))
                         var scat = this.state.djourney.categories.split(",")
                         scat.map((cat) => {
                             this.state.categories[cat].map((subcat) => {
@@ -127,14 +122,12 @@ class CreateProfile extends React.Component {
                             return cat
                         })
                         await this.setState({ SubCat: SubCat })
-                        console.log(this.state.SubCat)
                     })
                 }
             }
         }).catch((err) => {
-            console.log(err.response)
+            this.setState({isAuthenticated: false})
         })
-        console.log("path name", this.props.location)
         var cavatars = await getAvatars()
         cavatars.shift()
         await this.setState({ avatars: cavatars })
@@ -155,7 +148,7 @@ class CreateProfile extends React.Component {
                 await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
             }
         }).catch(err => {
-            console.log("error", err.response)
+            this.setState({isAuthenticated: false})
         })
     }
     addPortfolio = () => {
@@ -174,21 +167,16 @@ class CreateProfile extends React.Component {
         var basicInfo = { ...this.state.basicInfo }
         basicInfo[e.target.name] = e.target.value
         await this.setState({ basicInfo: basicInfo })
-        console.log(this.state.basicInfo)
     }
     portfolioInput = async (e) => {
         var portfolio = { ...this.state.portfolio }
         portfolio[e.target.name] = e.target.value
         await this.setState({ portfolio: portfolio })
-        console.log(this.state.portfolio)
     }
     handleInput2 = async (e) => {
-        console.log(e.target.name)
         var djourney = { ...this.state.djourney }
         djourney[e.target.name] = e.target.value
-        console.log(djourney)
         await this.setState({ djourney: djourney })
-        console.log(this.state.djourney)
     }
     selectAvatar = (e) => {
         this.setState({fileError: "Please wait..."})
@@ -212,7 +200,6 @@ class CreateProfile extends React.Component {
     submitPortfolio = (e) => {
         this.setState({ pmsg: "Please wait..." })
         e.preventDefault()
-        console.log("length", this.state.media.length)
         var data = {
             portfolio_metadata: JSON.stringify(this.state.portfolio),
             media: this.state.media
@@ -220,29 +207,22 @@ class CreateProfile extends React.Component {
         uploadPortfolio(data).then(res => {
             this.setState({ pmsg: "portfolio uploaded successfully" })
             getPortfolioByUser().then(async (res) => {
-                console.log("portfolio", res.data)
                 await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
-                console.log("portfolio", this.state.portfolios[0].media_urls)
             }).catch(err => {
-                console.log("error", err.response)
+                this.setState({isAuthenticated: false})
             })
         })
             .catch((err) => {
-                console.log("error", err.response)
                 this.setState({ pmsg: "something went wrong" })
             })
     }
     handleOthers = async (e) => {
         if (e.target.checked) {
-            console.log(e.target.name)
             var djourney = { ...this.state.djourney }
             var cats = [djourney.categories.split(",")]
             cats.push("others")
-            console.log(cats)
             djourney[e.target.name] = cats.join()
-            console.log(djourney)
             await this.setState({ djourney: djourney })
-            console.log(this.state.djourney)
         }
         else {
 
@@ -264,8 +244,6 @@ class CreateProfile extends React.Component {
 
             })
                 .catch((err) => {
-                    console.log(err.response)
-
                     if (err.response.data.detail === "Invalid session: Illegal session cookie provided: None. session cookie must be a non-empty string.") {
                         this.setState({ fileName: "Session Expired Please Login" })
                         setTimeout(() => {
@@ -280,14 +258,12 @@ class CreateProfile extends React.Component {
     }
     selectPFile = async (e) => {
         for (var i = 0; i < e.target.files.length; i++) {
-            console.log("length", e.target.files.length)
             var fileExt = e.target.files[i].name.split(".")
             if ((fileExt[fileExt.length - 1].toLowerCase() === "png") || (fileExt[fileExt.length - 1].toLowerCase() === "jpeg") || (fileExt[fileExt.length - 1].toLowerCase() === "jpg")) {
                 var media = [...this.state.media]
                 if (media.length !== 5) {
                     media.push(e.target.files[i])
                     await this.setState({ media: media })
-                    console.log("length", media.length)
                 }
                 else {
                     this.setState({ pfileName: "you can upload maximun 5 images" })
@@ -313,7 +289,6 @@ class CreateProfile extends React.Component {
             media: e.target.getAttribute("media").split(",")
         }
         await this.setState({ pshow: true, vportfolio: vportfolio})
-        console.log("media", this.state.media)
     }
     phandleClose = () => {
         this.setState({ pshow: false })
