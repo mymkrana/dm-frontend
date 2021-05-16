@@ -916,7 +916,7 @@ footer .nav-link {
   background-color: transparent;
 }
 .wrapper .fixed-top #site-header {
-  background-color: #EAE1CB !important;
+  background-color: transparent !important;
 }
 .wrapper .fixed-top #site-header a{
   color: #BD5828 !important;
