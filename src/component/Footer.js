@@ -1,7 +1,4 @@
 import React from 'react';
-import instaimg from '../images/insta.png'
-import twitterimg from '../images/twitter.png'
-import fbimg from '../images/fb.png'
 import { Nav } from 'react-bootstrap'
 import logo from '../images/logo.png'
 class Footer extends React.Component {

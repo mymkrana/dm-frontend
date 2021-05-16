@@ -17,6 +17,12 @@ class Header extends React.Component {
             this.setState({mdisplay: 0, mwidth: 0})
         }
     }
+    componentDidMount() {
+        const mscript = document.createElement("script");
+        mscript.src = "/scripts/main.js";
+        mscript.async = true;
+        document.body.appendChild(mscript);
+    }
     render() {
         return (
             <header className="sticky-top" id="stickytop">

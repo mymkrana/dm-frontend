@@ -7,14 +7,17 @@ class App extends PureComponent {
     super(props)
 
     this.state = {
-
+      scrollCLass: "feed"
     }
   }
-
+  pageScroll = () => {
+    this.setState({ scrollClass: 'Feed scrolling' })
+    setTimeout(() => { this.setState({ scrollCLass: 'Feed' }) }, 100)
+  }
   render() {
     return (
-      <div className="App wrapper">
-        <Header />
+      <div className="App wrapper" onScroll={this.pageScroll}>
+        <Header scroll={this.state.scrollCLass}/>
         <HomePage />
         <Footer />
       </div>
