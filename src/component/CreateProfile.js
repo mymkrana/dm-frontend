@@ -372,6 +372,9 @@ class CreateProfile extends React.Component {
         if (this.state.basicInfo.profile_name) {
             username = this.state.basicInfo.profile_name;
         }
+        if(Cookies.get("username")) {
+            username = Cookies.get("username");
+        } 
         return (
             <div className="cprofile">
                 <div className="container-fluid cmain p-0">

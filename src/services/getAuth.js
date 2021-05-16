@@ -5,6 +5,7 @@ export const getAuth = () => {
         return true
     }
     else {
+        Cookies.remove("username")
         return false
     }
 }

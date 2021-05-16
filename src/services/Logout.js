@@ -12,12 +12,11 @@ export const Logout = () => {
             if(res.status === 200) {
                 Cookies.remove("session")
                 Cookies.remove("userProfile")
+                Cookies.remove("username")
             }
             resolve(res)
-            console.log(res);
         }).catch(err => {
             reject(err)
-            console.log(err.response);
         })
 
     })

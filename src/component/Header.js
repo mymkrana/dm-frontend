@@ -71,7 +71,7 @@ class Header extends React.Component {
                                     <Nav.Link className="text-color px-3">Say Hello</Nav.Link>
                                 </LinkContainer>
                                 <LinkContainer to="">
-                                    <Nav.Link className="text-color px-3" onClick={this.LogoutMe}>{isAuth}</Nav.Link>
+                                    <Nav.Link className="text-color px-3" onClick={this.LogoutMe}>{this.state.isAuth}</Nav.Link>
                                 </LinkContainer>
                             </Nav>
                         </Navbar>

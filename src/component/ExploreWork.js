@@ -16,11 +16,11 @@ class ExploreWork extends PureComponent {
     }
     componentDidMount() {
         var auth = getAuth()
-        if(auth === false) {
-            this.setState({isAuthenticated: "false"}) 
+        if (auth === false) {
+            this.setState({ isAuthenticated: "false" })
         }
         else {
-            this.setState({isAuthenticated: true})
+            this.setState({ isAuthenticated: true })
         }
         getPortfolios()
             .then((res) => {
@@ -38,11 +38,11 @@ class ExploreWork extends PureComponent {
                 this.setState({ portfolios: portfolios })
                 console.log(portfolios)
             }).catch((err) => {
-                this.setState({error: "something went wrong"})
+                this.setState({ error: "something went wrong" })
             })
     }
     render() {
-        if (this.state.isAuthenticated==="false") {
+        if (this.state.isAuthenticated === "false") {
             return <Redirect
                 to={{
                     pathname: "/login",
@@ -54,12 +54,12 @@ class ExploreWork extends PureComponent {
             <div className="ework wrapper">
                 <Header />
                 <div className="top-banner pbanner">
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="container-fluid"><h3>Discover India's best design &amp; creative talent</h3></div>
-                            </div>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="container-fluid"><h3>Discover India's best design &amp; creative talent</h3></div>
                         </div>
                     </div>
+                </div>
                 <div className="e-content">
                     <div className="top-filters mt-5 mb-5 px-5">
                         <div className="efilters">
@@ -89,39 +89,41 @@ class ExploreWork extends PureComponent {
                             </Nav>
                         </div>
                         <div className="esearch">
-                            <Form.Control type="text" placeholder="search tags" className="font-arial"/>
+                            <Form.Control type="text" placeholder="search tags" className="font-arial" />
                         </div>
                     </div>
-                    <div className="blog-area">
-                        <div className="row ml-0">
-                            {
-                                this.state.portfolios.map((portfolio) => {
-                                    return (
-                                        <div className="col-sm-3 mb-2">
-                                            <a href={"/portfolio/" + portfolio.portfolio_id} >
-                                            <Card>
-                                                <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src={portfolio.media_urls[0]} width="100%"/></Card.Body>
-                                            </Card>
-                                            <Card.Footer className="px-0">
-                                                <div className="emeta">
-                                                    <div className="euser">
-                                                        <i className="fa fa-user px-2 float-left pt-1"></i><p className="font-arial float-left">Designmocha</p>
-                                                    </div>
-                                                    <div className="eoptions">
-                                                        <i className="fa fa-lightbulb-o px-2 float-left pt-1"></i><p className="font-arial float-left">0</p>
-                                                        <i className="fa fa-eye px-2 float-left pt-1"></i><p className="font-arial float-left">{portfolio.views}</p>
-                                                        <i className="fa fa-heart px-2 float-left pt-1"></i><p className="font-arial float-left">{portfolio.likes}</p>
-                                                        <i className="fa fa-comment px-2 float-left pt-1"></i><p className="font-arial float-left">0</p>
-                                                    </div>
-                                                </div>
-                                            </Card.Footer>
-                                            </a>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
+                    {
+                        (this.state.portfolios.length !== 0) ? (<div className="blog-area">
+                            <div className="row ml-0">
+                                {
+                                    this.state.portfolios.map((portfolio) => {
+                                        return (
+                                            <div className="col-sm-3 mb-2">
+                                                <a href={"/portfolio/" + portfolio.portfolio_id} >
+                                                    <Card>
+                                                        <Card.Body className="p-0 rounded"><img className="rounded" alt="portfolio img" src={portfolio.media_urls[0]} width="100%" /></Card.Body>
+                                                    </Card>
+                                                    <Card.Footer className="px-0">
+                                                        <div className="emeta">
+                                                            <div className="euser">
+                                                                <i className="fa fa-user px-2 float-left pt-1"></i><p className="font-arial float-left">Designmocha</p>
+                                                            </div>
+                                                            <div className="eoptions">
+                                                                <i className="fa fa-lightbulb-o px-2 float-left pt-1"></i><p className="font-arial float-left">0</p>
+                                                                <i className="fa fa-eye px-2 float-left pt-1"></i><p className="font-arial float-left">{portfolio.views}</p>
+                                                                <i className="fa fa-heart px-2 float-left pt-1"></i><p className="font-arial float-left">{portfolio.likes}</p>
+                                                                <i className="fa fa-comment px-2 float-left pt-1"></i><p className="font-arial float-left">0</p>
+                                                            </div>
+                                                        </div>
+                                                    </Card.Footer>
+                                                </a>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        </div>) : (<div><h5 className="text-center my-4">Loading please wait...</h5></div>)
+                    }
                 </div>
                 <Footer />
             </div>
