@@ -952,6 +952,19 @@ background-color: transparent !important;
 -webkit-box-shadow: 0 0 0 30px #231f20 inset !important;
 -webkit-text-fill-color: #BD5828;
 }
+.rsection input:-webkit-autofill,
+.rsection input:-webkit-autofill:hover, 
+.rsection input:-webkit-autofill:focus,
+.rsection textarea:-webkit-autofill,
+.rsection textarea:-webkit-autofill:hover,
+.rsection textarea:-webkit-autofill:focus,
+.rsection select:-webkit-autofill,
+.rsection select:-webkit-autofill:hover,
+.rsection select:-webkit-autofill:focus {
+background-color: transparent !important;
+-webkit-box-shadow: 0 0 0 30px #231f20 inset !important;
+-webkit-text-fill-color: #BD5828;
+}
 .pace .pace-progress:after {
   font-family: 'Athelas' !important;
 }

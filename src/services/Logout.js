@@ -9,6 +9,10 @@ export const Logout = () => {
         withCredentials: true,
         credentials: "include",
         }).then(res => {
+            if(res.status === 200) {
+                Cookies.remove("session")
+                Cookies.remove("userProfile")
+            }
             resolve(res)
             console.log(res);
         }).catch(err => {

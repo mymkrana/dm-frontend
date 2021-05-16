@@ -122,7 +122,7 @@ class Register extends React.Component {
                                         <Form.Check
                                             type="switch"
                                             id="custom-switch"
-                                            label="PRIVACY POLICY, &nbsp; LEGAL POLICY, &nbsp;TERMS OF SERVICE"
+                                            label="Privacy Policy, &nbsp; Legal Policy, &nbsp; Terms of Service"
                                             className="text-color"
                                             name="accept"
                                             required

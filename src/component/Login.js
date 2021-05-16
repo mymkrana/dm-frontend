@@ -73,7 +73,7 @@ class Login extends React.Component {
         if(this.state.Redirect==="false") {
             console.log(this.state.Redirect)
             if(this.state.isloggedin===true) {
-                return <Redirect to='/create-profile' />
+                return <Redirect to='/explore' />
             }
         }
         if(this.state.Redirect!=="false") {

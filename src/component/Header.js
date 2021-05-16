@@ -4,10 +4,12 @@ import siteLogo from '../images/logo-dark.png'
 import toggleMenu from '../images/menu.png'
 import { Nav, Navbar } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
+import { getAuth } from '../services/getAuth';
+import { Logout } from '../services/Logout';
 class Header extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { mdisplay: 0, mwidth: 0 };
+        this.state = { mdisplay: 0, mwidth: 0, isAuth: "Login"};
     }
     menuToggle = () => {
         if (this.state.mdisplay === 0) {
@@ -18,12 +20,26 @@ class Header extends React.Component {
         }
     }
     componentDidMount() {
+        var auth =  getAuth()
+        if(auth === true) {
+            this.setState({isAuth: "Logout"})
+        }
         const mscript = document.createElement("script");
         mscript.src = "/scripts/main.js";
         mscript.async = true;
         document.body.appendChild(mscript);
     }
+    LogoutMe = (e) => {
+        e.preventDefault()
+        Logout()
+        .then((res) => {
+            this.setState({isAuth: "Login"})
+        })
+    }
     render() {
+        // if((this.state.isAuth === false) || (this.state.isAuth === "false")) {
+        //     <Redirect to="/login" />
+        // }
         return (
             <header className="sticky-top" id="stickytop">
                 <div id="site-header">
@@ -53,6 +69,9 @@ class Header extends React.Component {
                                 </LinkContainer>
                                 <LinkContainer to="/">
                                     <Nav.Link className="text-color px-3">Say Hello</Nav.Link>
+                                </LinkContainer>
+                                <LinkContainer to="">
+                                    <Nav.Link className="text-color px-3" onClick={this.LogoutMe}>Logout</Nav.Link>
                                 </LinkContainer>
                             </Nav>
                         </Navbar>
