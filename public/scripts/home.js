@@ -17,7 +17,7 @@
 // });
 
 
-const ball = document.querySelector(".sabsolute2");
+const ball = document.querySelector("div.ball");
 
 let mouseX = 0;
 let mouseY = 0;

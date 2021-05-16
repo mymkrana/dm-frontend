@@ -36,10 +36,9 @@ class HomePage extends React.Component {
                             <video autoPlay loop muted id="background-video">
                                 <source src={SliderVideo} type="video/mp4" />
                             </video>
-                            <div className="sabsolute2">
-                            <div class="ball"></div>
-                            </div>
                             <div className="sabsolute">
+                                <div class="ball"></div>
+                                {/* <div id="div1" class="cursor"></div> */}
                                 <div className="container">
                                     <div className="slide-header">
                                         <h3 className="text-color text-center">Our vision is to be India`s biggest design crowdsourcing platform..</h3>
