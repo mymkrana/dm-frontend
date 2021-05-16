@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import siteLogo from '../images/logo-dark.png'
 import toggleMenu from '../images/menu.png'
 import { Nav, Navbar } from 'react-bootstrap'
@@ -9,7 +9,7 @@ import { Logout } from '../services/Logout';
 class Header extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { mdisplay: 0, mwidth: 0, isAuth: "Login"};
+        this.state = { mdisplay: 0, mwidth: 0, isAuth: "" };
     }
     menuToggle = () => {
         if (this.state.mdisplay === 0) {
@@ -19,10 +19,10 @@ class Header extends React.Component {
             this.setState({ mdisplay: 0, mwidth: 0 })
         }
     }
-    componentDidMount() {
-        var auth =  getAuth()
-        if(auth === true) {
-            this.setState({isAuth: "Logout"})
+    async componentDidMount() {
+        var auth = getAuth()
+        if (auth === true) {
+            await this.setState({ isAuth: "Logout" })
         }
         const mscript = document.createElement("script");
         mscript.src = "/scripts/main.js";
@@ -32,14 +32,18 @@ class Header extends React.Component {
     LogoutMe = (e) => {
         e.preventDefault()
         Logout()
-        .then((res) => {
-            this.setState({isAuth: "Login"})
-        })
+            .then((res) => {
+                this.setState({ isAuth: "Login" })
+            })
+            .catch((err) => {
+                this.setState({ isAuth: "Login" })
+            })
     }
     render() {
-        // if((this.state.isAuth === false) || (this.state.isAuth === "false")) {
-        //     <Redirect to="/login" />
-        // }
+        console.log(this.state.isAuth)
+        if ((window.location.pathname === "/explore") && (this.state.isAuth === "Login")) {
+            return <Redirect to="/login" />
+        }
         return (
             <header className="sticky-top" id="stickytop">
                 <div id="site-header">
@@ -70,9 +74,13 @@ class Header extends React.Component {
                                 <LinkContainer to="/">
                                     <Nav.Link className="text-color px-3">Say Hello</Nav.Link>
                                 </LinkContainer>
-                                <LinkContainer to="">
-                                    <Nav.Link className="text-color px-3" onClick={this.LogoutMe}>{this.state.isAuth}</Nav.Link>
-                                </LinkContainer>
+                                    {
+                                        ((this.state.isAuth==="Login") || (this.state.isAuth==="")) ? (<LinkContainer to="/login">
+                                            <Nav.Link className="text-color px-3">Login</Nav.Link>
+                                        </LinkContainer>) : (<LinkContainer to="/">
+                                        <Nav.Link className="text-color px-3" onClick={this.LogoutMe}>{this.state.isAuth}</Nav.Link>
+                                </LinkContainer>)
+                                    }
                             </Nav>
                         </Navbar>
                     </div>

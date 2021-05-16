@@ -15,6 +15,7 @@ import Cookies from 'js-cookie';
 import { createProfile } from '../services/createProfile'
 import { getPortfolioByUser } from '../services/getPortfolioByUser';
 import { selectAvatar } from '../services/selectAvatar';
+import { Logout } from '../services/Logout';
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
@@ -205,7 +206,7 @@ class CreateProfile extends React.Component {
             media: this.state.media
         }
         uploadPortfolio(data).then(res => {
-            this.setState({ pmsg: "portfolio uploaded successfully" })
+            this.setState({ pmsg: "portfolio uploaded successfully", portfolio: {}, media: []  })
             getPortfolioByUser().then(async (res) => {
                 await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
             }).catch(err => {
@@ -356,6 +357,16 @@ class CreateProfile extends React.Component {
         basicInfo[e.target.name] = e.target.value
         await this.setState({ basicInfo: basicInfo })
     }
+    LogoutMe = (e) => {
+        e.preventDefault()
+        Logout()
+        .then((res) => {
+            this.setState({isAuthenticated: false})
+        })
+        .catch((err) => {
+            this.setState({isAuthenticated: false})
+        })
+    }
     render() {
         if (this.state.isAuthenticated === false) {
             return <Redirect
@@ -417,7 +428,7 @@ class CreateProfile extends React.Component {
                                     </li>
                                 </ul>
                             </div>
-                            <Link className="text-color lgout">Logout</Link>
+                            <Link to="" className="text-color lgout" onClick={this.LogoutMe}>Logout</Link>
                             <Modal show={this.state.show} onHide={this.handleClose} centered size="lg" className="cmodal">
                                 <Modal.Header closeButton>
                                     <Modal.Title className="cmtitle text-center w-100"></Modal.Title>
@@ -542,7 +553,7 @@ class CreateProfile extends React.Component {
                                     </div>
                                 </div>
                                 <div id="djourney" className="container tab-pane fade"><br />
-                                    <h3 className="weight-600">Sahil Mahajan / Design Journey</h3>
+                                    <h3 className="weight-600">{`${username} / Design Journey`}</h3>
                                     <div className="form-2">
                                         <Form>
                                             <Row>
@@ -760,6 +771,7 @@ class CreateProfile extends React.Component {
                                 <div id="vprofile" className="container tab-pane fade"><br />
                                 <h3 className="weight-600">Schedue a meeting</h3>
                                 <p>Schedule a meetine with us to get yourself verified on Designmocha.</p>
+                                <span></span>
                                 <div className='calendly-inline-widget' data-url='https://calendly.com/designmocha?text_color=737981&amp;primary_color=ff8c00' style={{width: 100 + "%", height: 67 + "vh"}}></div>
                                 </div>
                                 <div id="bpayment" className="container tab-pane fade"><br />

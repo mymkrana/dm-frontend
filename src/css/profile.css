@@ -251,6 +251,9 @@
 }
 .pimg {
     min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .myportfolios .ptitle {
     width: 100%;

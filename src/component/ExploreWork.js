@@ -39,6 +39,7 @@ class ExploreWork extends PureComponent {
                 console.log(portfolios)
             }).catch((err) => {
                 this.setState({ error: "something went wrong" })
+                this.setState({ isAuthenticated: "false" })
             })
     }
     render() {
