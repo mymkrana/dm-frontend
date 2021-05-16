@@ -1001,3 +1001,13 @@ div.ball{
   margin-left: -2500px;
   margin-top: -2500px;
 }
+#stickytop a:hover {
+    font-size: 20px;
+    margin-top: -4px;
+    color: #BD5828 !important;
+}
+#stickytop.fixed-top a:hover {
+  font-size: 20px;
+  margin-top: -4px;
+  color: #878787 !important;
+}
