@@ -257,7 +257,7 @@ span.flow {
 
 .rsection input::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: red;
+    color: #bd572893;
     opacity: 1;
     /* Firefox */
 }
@@ -270,7 +270,7 @@ span.flow {
 }
 
 .rsection input::placeholder {
-    color: #AF4125!important;
+    color: #bd572893 !important;
 }
 
 .rsection .form-control:focus {

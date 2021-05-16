@@ -1,3 +1,9 @@
 .contact-us {
     background-color: #EAE1CB;
 }
+.ccol {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 20px;
+}

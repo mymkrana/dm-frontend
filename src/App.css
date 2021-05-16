@@ -254,6 +254,19 @@ footer p {
   width: 100%;
   margin: auto;
 }
+.sabsolute2 {
+  position: absolute !important;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  margin: auto;
+  background: rgba(0, 0, 0, 0.5);
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
 .sabsolute .container {
   align-items: center;
 }
@@ -855,12 +868,7 @@ footer .nav-link {
   font-size: 18px !important;
   padding: 8px 15px !important;
 }
-.sabsolute {
-  background: rgba(0, 0, 0, 0.5);
-	background-size: 100%;
-	background-repeat: no-repeat;
-	background-position: center;
-}
+
 .cursor
 {
   opacity: 0.6;
@@ -916,6 +924,9 @@ footer .nav-link {
   background-color: transparent;
 }
 .wrapper .fixed-top #site-header {
+  background-color: #EAE1CB !important;
+}
+.App.wrapper .fixed-top #site-header {
   background-color: transparent !important;
 }
 .wrapper .fixed-top #site-header a{
@@ -975,4 +986,18 @@ background-color: transparent !important;
 }
 .pbanner .col-sm-6 {
   padding-left: 40px;
+}
+
+
+div.ball{
+  background: radial-gradient(circle, rgb(255,255,255, 0.2), rgb(255,255,255, 0.1) 150px);
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: center !important;
+  transform: translate(50%, 20%);
 }

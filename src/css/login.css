@@ -217,7 +217,7 @@ span.flow {
 }
 
 .logsection input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: red;
+    color: #bd572893;
     opacity: 1; /* Firefox */
   }
 
@@ -228,7 +228,7 @@ span.flow {
     /* border: none; */
 }
 .logsection input::placeholder {
-    color: #AF4125!important;
+    color: #bd572893 !important;
   }
   .logsection .form-control:focus {
     color: #212529;

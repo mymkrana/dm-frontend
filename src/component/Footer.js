@@ -23,12 +23,12 @@ class Footer extends React.Component {
                             <div className="col-sm-4 pleft">
                                 <h4>Menu</h4>
                                 <Nav className="flex-column">
-                                    <Nav.Link href="/home" className="text-color">Why Choose Us</Nav.Link>
-                                    <Nav.Link href="/about" className="text-color">About Us</Nav.Link>
-                                    <Nav.Link href="/contact" className="text-color">Contact US</Nav.Link>
-                                    <Nav.Link href="/how-it-works" className="text-color">How It Works</Nav.Link>
+                                    <Nav.Link href="/" className="text-color">Why Choose Us</Nav.Link>
+                                    <Nav.Link href="/about-us" className="text-color">About Us</Nav.Link>
+                                    <Nav.Link href="/contact-us" className="text-color">Contact US</Nav.Link>
+                                    <Nav.Link href="/faq" className="text-color">How It Works</Nav.Link>
                                     <Nav.Link className="text-color">FAQ</Nav.Link>
-                                    <Nav.Link href="/privacy-policy" className="text-color">Privacy &amp; Policy</Nav.Link>
+                                    <Nav.Link href="/terms-and-conditions" className="text-color">Privacy &amp; Policy</Nav.Link>
                                 </Nav>
                             </div>
                             <div className="col-sm-4 pleft">

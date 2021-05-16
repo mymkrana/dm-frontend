@@ -45,6 +45,8 @@ dc.addEventListener('scroll', function() {
       document.body.style.paddingTop = '0';
     } 
 });
+
+
 // document.addEventListener("DOMContentLoaded", function(){
 //   var menu = document.getElementsByClassName("nav-toggle")[0];
 //   var slide = document.getElementsByClassName("slide-menu")[0]

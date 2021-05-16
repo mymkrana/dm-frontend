@@ -127,7 +127,7 @@ class CreateProfile extends React.Component {
                 }
             }
         }).catch((err) => {
-            this.setState({isAuthenticated: false})
+            // this.setState({isAuthenticated: false})
         })
         var cavatars = await getAvatars()
         cavatars.shift()
@@ -149,7 +149,7 @@ class CreateProfile extends React.Component {
                 await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
             }
         }).catch(err => {
-            this.setState({isAuthenticated: false})
+            // this.setState({isAuthenticated: false})
         })
     }
     addPortfolio = () => {
@@ -368,6 +368,7 @@ class CreateProfile extends React.Component {
         })
     }
     render() {
+        console.log("is", this.state.isAuthenticated)
         if (this.state.isAuthenticated === false) {
             return <Redirect
                 to={{
