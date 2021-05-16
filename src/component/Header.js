@@ -77,9 +77,12 @@ class Header extends React.Component {
                                     {
                                         ((this.state.isAuth==="Login") || (this.state.isAuth==="")) ? (<LinkContainer to="/login">
                                             <Nav.Link className="text-color px-3">Login</Nav.Link>
-                                        </LinkContainer>) : (<LinkContainer to="/">
+                                        </LinkContainer>) : (<><LinkContainer to="/create-profile">
+                                        <Nav.Link className="text-color px-3" >My Profile</Nav.Link>
+                                </LinkContainer>
+                                        <LinkContainer to="/">
                                         <Nav.Link className="text-color px-3" onClick={this.LogoutMe}>{this.state.isAuth}</Nav.Link>
-                                </LinkContainer>)
+                                </LinkContainer></>)
                                     }
                             </Nav>
                         </Navbar>

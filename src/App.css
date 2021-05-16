@@ -982,7 +982,7 @@ background-color: transparent !important;
 
 
 div.ball{
-  background: radial-gradient(circle, rgb(255,255,255, 0.1), rgb(255,255,255, 0.08), rgb(255,255,255, 0.07), transparent 350px);
+  background: radial-gradient(circle, rgb(255,255,255, 0.1), rgb(255,255,255, 0.08), rgb(255,255,255, 0.07), transparent 320px);
   width: 800px;
   height: 800px;
   border-radius: 50%;
@@ -991,6 +991,7 @@ div.ball{
   top: 0;
   left: 0;
   transform: translate(-50%, -50%);
+  filter: brightness(1.2);
 }
 .ball:after {
   content: "";
@@ -1001,12 +1002,12 @@ div.ball{
   margin-left: -2500px;
   margin-top: -2500px;
 }
-#stickytop a:hover {
+#stickytop .slide-menu a:hover {
     font-size: 20px;
     margin-top: -4px;
     color: #BD5828 !important;
 }
-#stickytop.fixed-top a:hover {
+#stickytop.fixed-top .slide-menu a:hover {
   font-size: 20px;
   margin-top: -4px;
   color: #878787 !important;

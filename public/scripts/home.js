@@ -1,20 +1,20 @@
-// var originalBG = $(".sabsolute").css("background");
+var originalBG = $(".sabsolute").css("background");
 
-// $('.sabsolute').mousemove(function(e) {
-//     x = e.pageX - this.offsetLeft;
-//     y = e.pageY - this.offsetTop;
-//     xy = x + " " + y;
-//     bgWebKit = "-webkit-gradient(radial, " + xy + ", 0, " + xy + ", 280, from(rgba(255,255,255,0.1)), to(rgba(0, 0, 0, 0.5 ))), " + "rgba(0, 0, 0, 0)";
-//     // bgMoz = "-moz-radial-gradient(" + x + "px " + y + "px 45deg, circle, " + lightColor + " 0%, " + originalBG + " " + gradientSize + "px)";
+$('.sabsolute').mousemove(function(e) {
+    x = e.pageX - this.offsetLeft;
+    y = e.pageY - this.offsetTop;
+    xy = x + " " + y;
+    bgWebKit = "-webkit-gradient(radial, " + xy + ", 0, " + xy + ", 320, from(rgba(255,255,255,0)), to(rgba(0, 0, 0, 0.3 ))), " + "rgba(0, 0, 0, 0)";
+    // bgMoz = "-moz-radial-gradient(" + x + "px " + y + "px 45deg, circle, " + lightColor + " 0%, " + originalBG + " " + gradientSize + "px)";
 
-//     $(this)
-//         .css({background: bgWebKit})
-//         // .css({background: bgMoz});
-//     }).mouseleave(function() {
-//     $(this).css({
-//         background: originalBG
-//     });
-// });
+    $(this)
+        .css({background: bgWebKit})
+        // .css({background: bgMoz});
+    }).mouseleave(function() {
+    $(this).css({
+        background: originalBG
+    });
+});
 
 
 const ball = document.querySelector("div.ball");
@@ -43,7 +43,6 @@ function animate(){
   requestAnimationFrame(animate);
 }
 animate();
-
 
 document.addEventListener("mousemove", function(event){
   mouseX = event.pageX;
