@@ -12,10 +12,8 @@ export const selectAvatar = (user) => {
         data:user
         }).then(res => {
             resolve(res)
-            console.log(res);
         }).catch(err => {
             reject(err)
-            console.log(err.response);
         })
     })
 }

@@ -13,10 +13,8 @@ export const getPortfolios = () => {
 
         }).then(res => {
             resolve(res)
-            console.log(res.data);
         }).catch(err => {
             reject(err)
-            console.log(err.response);
         })
     })
 }

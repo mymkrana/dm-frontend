@@ -34,7 +34,6 @@ $(".scroll-down").click(function () {
 })
 var dc = document.getElementsByClassName("wrapper")[0]
 dc.addEventListener('scroll', function() {
-  console.log(dc.scrollTop)
     if (dc.scrollTop > 50) {
       document.getElementById('stickytop').classList.add('fixed-top');
       // add padding top to show content behind navbar

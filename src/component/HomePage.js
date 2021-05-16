@@ -7,12 +7,14 @@ import SliderVideo from '../images/slider-video.mp4'
 import { Link } from 'react-router-dom';
 import '../big-counter.css'
 import { getAuth } from '../services/getAuth';
+import { Logout } from '../services/Logout';
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
     componentDidMount() {
+        Logout();
         getAuth()
         const script = document.createElement("script");
         script.src = "/scripts/home.js";

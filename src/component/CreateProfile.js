@@ -28,7 +28,7 @@ class CreateProfile extends React.Component {
         await this.setState({ basicInfo: basicInfo })
         console.log(this.state.isProfile)
         var basicProfile = { ...this.state.basicInfo }
-        basicProfile = { first_name: basicProfile.first_name, last_name: basicProfile.last_name, email: basicProfile.email, mobile_number: basicProfile.mobile_number, gender: basicProfile.gender, country: basicProfile.country, state: basicProfile.state, city: basicProfile.city, address: basicProfile.address, date_of_birth: basicProfile.date_of_birth, pin_code: basicProfile.pin_code }
+        basicProfile = { first_name: basicProfile.first_name, last_name: basicProfile.last_name, email: basicProfile.email, mobile_number: basicProfile.mobile_number, gender: basicProfile.gender, country: basicProfile.country, state: basicProfile.state, city: basicProfile.city, address: basicProfile.address, date_of_birth: basicProfile.date_of_birth, pin_code: basicProfile.pin_code, full_name: basicProfile.full_name }
         if ((this.state.isProfile === "true") || (this.state.isProfile === true)) {
             basicProfile.profile_name = '';
             var d = new Date(basicProfile.date_of_birth)
