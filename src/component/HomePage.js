@@ -4,7 +4,7 @@ import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import sdown from '../images/sdown.png'
 import SliderVideo from '../images/slider-video.mp4'
-import {DotLoader} from 'react-spinners'
+// import {DotLoader} from 'react-spinners'
 // import { Link } from 'react-router-dom';
 import '../big-counter.css'
 import { getAuth } from '../services/getAuth';
