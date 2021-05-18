@@ -12,7 +12,7 @@ import { getAuth } from '../services/getAuth';
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {loading: true};
+        this.state = { loading: true };
     }
     componentDidMount() {
         // axios.get("/slider-video.mp4").then(() => {
@@ -34,21 +34,21 @@ class HomePage extends React.Component {
         page.insertBefore(pscript, page.childNodes[0])
     }
     videoPlay = () => {
-        this.setState({loading: false})
+        this.setState({ loading: false })
     }
     render() {
         // if(this.state.loading) {
         //     return <div className="preloader"><DotLoader loading={this.state.loading}/></div>
         // }
+        /* {
+                    this.state.loading ? (<div className="preloader"><DotLoader loading={this.state.loading}/></div>) : ""
+                } */
         return (
             <div className="page-container" id="page">
-                {/* {
-                    this.state.loading ? (<div className="preloader"><DotLoader loading={this.state.loading}/></div>) : ""
-                } */}
                 <section className="main-section">
                     <div>
                         <div className='item slide-1'>
-                            <video autoPlay loop muted id="background-video" preload="auto" onCanPlay = {this.videoPlay}>
+                            <video autoPlay loop muted id="background-video" preload="auto" onCanPlay={this.videoPlay}>
                                 <source src={SliderVideo} type="video/mp4" />
                             </video>
                             <div className="sabsolute">
