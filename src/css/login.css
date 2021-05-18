@@ -376,3 +376,9 @@ input[type="email"], input[type="text"], input[type="password"] {
   .logsection #exampleInputEmail1 {
       border-radius: 0 !important;
   }
+  .logsection .form-control:focus {
+      color: #EAE1CB !important;
+  }
+  .rsection .form-control:focus {
+    color: #EAE1CB !important;
+}
