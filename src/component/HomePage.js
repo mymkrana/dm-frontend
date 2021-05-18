@@ -8,7 +8,7 @@ import {DotLoader} from 'react-spinners'
 // import { Link } from 'react-router-dom';
 import '../big-counter.css'
 import { getAuth } from '../services/getAuth';
-import axios from 'axios';
+// import axios from 'axios';
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
