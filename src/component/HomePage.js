@@ -14,10 +14,10 @@ class HomePage extends React.Component {
         super(props);
         this.state = {loading: true};
     }
-    componentDidMount() {
-        axios.get("/slider-video.mp4").then(() => {
-            this.setState({loading: false})
-        })
+    componentWillMount() {
+        // axios.get("/slider-video.mp4").then(() => {
+        //     this.setState({loading: false})
+        // })
         getAuth()
         // var page = document.getElementById("page")
         // const script = document.createElement("script");
@@ -33,16 +33,22 @@ class HomePage extends React.Component {
         // pscript.async = true;
         // page.insertBefore(pscript, page.childNodes[0])
     }
+    videoPlay = () => {
+        this.setState({loading: false})
+    }
     render() {
-        if(this.state.loading) {
-            return <div className="preloader"><DotLoader loading={this.state.loading}/></div>
-        }
+        // if(this.state.loading) {
+        //     return <div className="preloader"><DotLoader loading={this.state.loading}/></div>
+        // }
         return (
             <div className="page-container" id="page">
+                {
+                    this.state.loading ? (<div className="preloader"><DotLoader loading={this.state.loading}/></div>) : ""
+                }
                 <section className="main-section">
                     <div>
                         <div className='item slide-1'>
-                            <video autoPlay loop muted id="background-video">
+                            <video autoPlay loop muted id="background-video" preload="auto" onCanPlay = {this.videoPlay}>
                                 <source src={SliderVideo} type="video/mp4" />
                             </video>
                             <div className="sabsolute">

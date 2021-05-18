@@ -49,6 +49,7 @@ document.addEventListener("mousemove", function(event){
   mouseX = event.pageX;
   mouseY = event.pageY;
 })
+
 // $(document).ready(function () {
 //     $("#page").hover(function () {
 //         $("#background-video").trigger('play')
