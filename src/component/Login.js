@@ -6,6 +6,7 @@ import { LoginMe } from '../services/LoginMe';
 import { getSession } from '../services/getSession'
 import { instanceOf } from 'prop-types';
 import {withCookies, Cookies } from 'react-cookie';
+import {Nav} from 'react-bootstrap'
 // import loader from '../images/loader.gif'
 class Login extends React.Component {
     static propTypes = {
@@ -87,7 +88,7 @@ class Login extends React.Component {
                         <div className="row itemcenter">
                             <div className="col-sm-6 center ">
                                 <h4 className="sectionwel">WELCOME TO <br />DESIGNMOCHA.</h4>
-                                <Link to="/" className="btn my-btn sbtn">Back To Home </Link>
+                                <Nav.Link href="/" className="btn my-btn sbtn">Back To Home </Nav.Link>
                             </div>
                             <div className="col-sm-6 form">
                                 <div className="lflex">
