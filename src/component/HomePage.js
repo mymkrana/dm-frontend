@@ -238,7 +238,7 @@ Branding,Fashion Design, Artistic Design, Digital Design..</h3>
                         </div>
                         <div className="section-twelve">
                             <div className='container'>
-                                <Link className="btn my-btn text-color" to="/register">JOIN FOR FREE</Link>
+                                <a className="btn my-btn text-color" href="/register">JOIN FOR FREE</a>
                             </div>
                         </div>
                     </div>
