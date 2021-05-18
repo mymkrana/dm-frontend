@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Modal, Button, Nav } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { Link, Redirect } from 'react-router-dom';
 import '../css/register.css'
 import { RegisterMe } from '../services/RegisterMe';
@@ -95,7 +95,7 @@ class Register extends React.Component {
                                 <div className="welcome">
                                     <h4 className="sectionwel">WELCOME TO <br />DESIGNMOCHA.</h4>
                                 </div>
-                                <Nav.Link href="/" className="btn my-btn sbtn">Back To Home </Nav.Link>
+                                <a href="/" className="btn my-btn sbtn">Back To Home </a>
                             </div>
                             <div className="col-sm-6 form">
                                 <div className="rflex">

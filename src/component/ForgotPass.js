@@ -3,7 +3,6 @@ import React from 'react';
 import '../css/login.css'
 import { Link } from 'react-router-dom'
 import { ResetPass } from '../services/ResetPass';
-import { Nav } from 'react-bootstrap';
 // import loader from '../images/loader.gif'
 class ForgotPass extends React.Component {
     constructor(props) {
@@ -50,7 +49,7 @@ class ForgotPass extends React.Component {
                         <div class="row itemcenter">
                             <div class="col-sm-6 center ">
                                 <h4 class="sectionwel">WELCOME TO <br />DESIGNMOCHA.</h4>
-                                <Nav.Link href="/" class="btn my-btn sbtn">Back To Home </Nav.Link>
+                                <a href="/" className="btn my-btn sbtn">Back To Home </a>
                             </div>
                             <div class="col-sm-6 form">
                                 <div className="lflex">
