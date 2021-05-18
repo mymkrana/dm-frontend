@@ -33,7 +33,7 @@ const SortableList = SortableContainer(({ items }) => {
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none", phide: "block", fbtn: false };
+        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none", phide: "block", fbtn: false, prbtn:false };
     }
     submitBasicProfile = async (e) => {
         e.preventDefault()
@@ -173,7 +173,7 @@ class CreateProfile extends React.Component {
     };
     addPortfolio = () => {
         if (this.state.isportfolio === "none") {
-            this.setState({ isportfolio: "block", pdisplay: "none" })
+            this.setState({ isportfolio: "block", pdisplay: "none", portfolio: {}, pmsg: '', pfileName: "" })
         }
         else {
             this.setState({ isportfolio: "none", pdisplay: "block" })
@@ -218,22 +218,24 @@ class CreateProfile extends React.Component {
         }
     }
     submitPortfolio = (e) => {
-        this.setState({ pmsg: "Please wait..." })
+        this.setState({ pmsg: "Please wait...", prbtn: true })
         e.preventDefault()
         var data = {
             portfolio_metadata: JSON.stringify(this.state.portfolio),
             media: this.state.media
         }
-        uploadPortfolio(data).then(res => {
-            this.setState({ pmsg: "portfolio uploaded successfully", portfolio: {}, media: [] })
+        uploadPortfolio(data, (progress) => {
+            this.setState({pfileName: `Uploading Images... - ${progress}%`})
+        }).then(res => {
+            this.setState({ pmsg: "portfolio uploaded successfully", portfolio: {}, media: [], pfileName: ""})
             getPortfolioByUser().then(async (res) => {
-                await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
+                await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block", prbtn: false, vportfolio: ""  })
             }).catch(err => {
                 this.setState({ isAuthenticated: false })
             })
         })
             .catch((err) => {
-                this.setState({ pmsg: "something went wrong" })
+                this.setState({ pmsg: "something went wrong", prbtn: false })
             })
     }
     handleOthers = async (e) => {
@@ -676,7 +678,7 @@ class CreateProfile extends React.Component {
                                 <div id="mwork" className="container tab-pane fade"><br />
                                     <h3 className="weight-600">Designguru / My Work</h3>
                                     <p></p>
-                                    <button className="mt-3 btn my-btn cbtn text-color float-right mb-2" style={{ display: this.state.addbtn }} onClick={this.addPortfolio}>Add Portfolio</button>
+                                    <button className="mt-3 btn my-btn cbtn text-color float-right mb-2" style={{ display: this.state.addbtn }} onClick={this.addPortfolio} disabled={this.state.prbtn}>Add Portfolio</button>
                                     <div className="myportfolios mb-2" style={{ display: this.state.pdisplay }}>
                                         {
                                             this.state.portfolios.map((portfolio) => {
@@ -710,7 +712,8 @@ class CreateProfile extends React.Component {
                                             <Row className='mt-3'>
                                                 <Col>
                                                     <div class="upload-btn-wrapper">
-                                                        <p>you can upload max 5 images</p>
+                                                        <p className="font-arial">you can upload max 5 images</p>
+                                                        <span className="font-arial">please drag and drop to r-order images</span>
                                                         <div>
                                                             <SortableList items={this.state.media} onSortEnd={this.onSortEnd} axis="x" />
                                                             {/* {
@@ -719,7 +722,7 @@ class CreateProfile extends React.Component {
                                                                 // })
                                                             } */}
                                                         </div>
-                                                        <label class="mt-2 p-2 btn my-btn cbtn text-color font-roboto" htmlFor="pupload">choose image</label>
+                                                        <label class="mt-2 p-2 btn my-btn cbtn text-color font-roboto" htmlFor="pupload" disabled={this.state.prbtn}>choose image</label>
                                                         <input type="file" name="myfile" id="pupload" onChange={this.selectPFile} multiple required />
                                                     </div>
                                                     <p className="font-roboto">{this.state.pfileName}</p>
@@ -730,7 +733,7 @@ class CreateProfile extends React.Component {
                                                 <Col>
                                                 </Col>
                                                 <Col>
-                                                    <button className="mb-2 btn my-btn cbtn text-color float-right">Submit</button>
+                                                    <button className="mb-2 btn my-btn cbtn text-color float-right" disabled={this.state.prbtn}>Submit</button>
                                                 </Col>
                                             </Row>
                                         </Form>
