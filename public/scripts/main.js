@@ -51,7 +51,9 @@ paceOptions = {
   ajax: false, // disabled
   document: false, // disabled
   eventLag: false, // disabled
-  elements: false
+  elements: {
+    selectors: ['#background-video']
+  }
 };
 // document.addEventListener("DOMContentLoaded", function(){
 //   var menu = document.getElementsByClassName("nav-toggle")[0];
