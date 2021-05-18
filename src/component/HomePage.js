@@ -19,19 +19,19 @@ class HomePage extends React.Component {
         //     this.setState({loading: false})
         // })
         getAuth()
-        // var page = document.getElementById("page")
-        // const script = document.createElement("script");
-        // script.src = "/scripts/home.js";
-        // script.async = true;
-        // page.insertBefore(script, page.childNodes[0])
-        // const mscript = document.createElement("script");
-        // mscript.src = "/scripts/main.js";
-        // mscript.async = true;
-        // page.insertBefore(mscript, page.childNodes[0])
-        // const pscript = document.createElement("script");
-        // pscript.src = "/scripts/pace.min.js";
-        // pscript.async = true;
-        // page.insertBefore(pscript, page.childNodes[0])
+        var page = document.getElementById("page")
+        const script = document.createElement("script");
+        script.src = "/scripts/home.js";
+        script.async = true;
+        page.insertBefore(script, page.childNodes[0])
+        const mscript = document.createElement("script");
+        mscript.src = "/scripts/main.js";
+        mscript.async = true;
+        page.insertBefore(mscript, page.childNodes[0])
+        const pscript = document.createElement("script");
+        pscript.src = "/scripts/pace.min.js";
+        pscript.async = true;
+        page.insertBefore(pscript, page.childNodes[0])
     }
     videoPlay = () => {
         this.setState({loading: false})
@@ -42,9 +42,9 @@ class HomePage extends React.Component {
         // }
         return (
             <div className="page-container" id="page">
-                {
+                {/* {
                     this.state.loading ? (<div className="preloader"><DotLoader loading={this.state.loading}/></div>) : ""
-                }
+                } */}
                 <section className="main-section">
                     <div>
                         <div className='item slide-1'>
