@@ -1015,3 +1015,18 @@ div.ball{
 .top-banner h3{
   font-weight: 700;
 }
+.preloader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: black;
+  z-index: 9999;
+}
+.preloader span span{
+  background-color: #EAE1CB !important;
+}

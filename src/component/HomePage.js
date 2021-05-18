@@ -4,15 +4,20 @@ import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import sdown from '../images/sdown.png'
 import SliderVideo from '../images/slider-video.mp4'
+import {DotLoader} from 'react-spinners'
 // import { Link } from 'react-router-dom';
 import '../big-counter.css'
 import { getAuth } from '../services/getAuth';
+import axios from 'axios';
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {loading: true};
     }
     componentDidMount() {
+        axios.get("/slider-video.mp4").then(() => {
+            this.setState({loading: false})
+        })
         getAuth()
         // var page = document.getElementById("page")
         // const script = document.createElement("script");
@@ -29,6 +34,9 @@ class HomePage extends React.Component {
         // page.insertBefore(pscript, page.childNodes[0])
     }
     render() {
+        if(this.state.loading) {
+            return <div className="preloader"><DotLoader loading={this.state.loading}/></div>
+        }
         return (
             <div className="page-container" id="page">
                 <section className="main-section">
