@@ -50,10 +50,8 @@ dc.addEventListener('scroll', function() {
 paceOptions = {
   ajax: false, // disabled
   document: false, // disabled
-  eventLag: false, // disabled
-  elements: {
-    selectors: ['#background-video']
-  }
+  eventLag: true, // disabled
+  elements: false
 };
 // document.addEventListener("DOMContentLoaded", function(){
 //   var menu = document.getElementsByClassName("nav-toggle")[0];
