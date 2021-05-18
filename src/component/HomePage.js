@@ -14,7 +14,7 @@ class HomePage extends React.Component {
         super(props);
         this.state = {loading: true};
     }
-    componentWillMount() {
+    componentDidMount() {
         // axios.get("/slider-video.mp4").then(() => {
         //     this.setState({loading: false})
         // })
