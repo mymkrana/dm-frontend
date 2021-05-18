@@ -47,7 +47,12 @@ dc.addEventListener('scroll', function() {
     } 
 });
 
-
+paceOptions = {
+  ajax: false, // disabled
+  document: false, // disabled
+  eventLag: false, // disabled
+  elements: false
+};
 // document.addEventListener("DOMContentLoaded", function(){
 //   var menu = document.getElementsByClassName("nav-toggle")[0];
 //   var slide = document.getElementsByClassName("slide-menu")[0]
