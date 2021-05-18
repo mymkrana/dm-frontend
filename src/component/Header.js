@@ -59,30 +59,30 @@ class Header extends React.Component {
                         <Navbar id="basic-navbar-nav">
                             <Nav className="mr-auto">
                                 <div className="nav-close" onClick={this.menuToggle}><i className="fa fa-close fa-2x float-right"></i></div>
-                                <LinkContainer to="/">
-                                    <Nav.Link className="text-color px-3">Home</Nav.Link>
-                                </LinkContainer>
-                                <LinkContainer to="/explore">
-                                    <Nav.Link className="text-color px-3">Explore Work</Nav.Link>
-                                </LinkContainer>
-                                <LinkContainer to="/dm-cafe">
-                                    <Nav.Link className="text-color px-3">DM Cafe</Nav.Link>
-                                </LinkContainer>
-                                <LinkContainer to="/about-us">
-                                    <Nav.Link className="text-color px-3">About Us</Nav.Link>
-                                </LinkContainer>
-                                <LinkContainer to="/contact-us">
-                                    <Nav.Link className="text-color px-3">Say Hello</Nav.Link>
-                                </LinkContainer>
+                                <Nav.Item>
+                                    <Nav.Link href="/" className="text-color px-3">Home</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link href="/explore" className="text-color px-3">Explore Work</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link href="/" className="text-color px-3">DM Cafe</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link href="/about-us" className="text-color px-3">About Us</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link href="/contact-us" className="text-color px-3">Say Hello</Nav.Link>
+                                </Nav.Item>
                                     {
-                                        ((this.state.isAuth==="Login") || (this.state.isAuth==="")) ? (<LinkContainer to="/login">
-                                            <Nav.Link className="text-color px-3">Login</Nav.Link>
-                                        </LinkContainer>) : (<><LinkContainer to="/create-profile">
-                                        <Nav.Link className="text-color px-3" >My Profile</Nav.Link>
-                                </LinkContainer>
-                                        <LinkContainer to="/">
-                                        <Nav.Link className="text-color px-3" onClick={this.LogoutMe}>{this.state.isAuth}</Nav.Link>
-                                </LinkContainer></>)
+                                        ((this.state.isAuth==="Login") || (this.state.isAuth==="")) ? (<Nav.Item>
+                                            <Nav.Link href="/login" className="text-color px-3">Login</Nav.Link>
+                                        </Nav.Item>) : (<><Nav.Item to="/create-profile">
+                                        <Nav.Link href="/create-profile" className="text-color px-3" >My Profile</Nav.Link>
+                                </Nav.Item>
+                                        <Nav.Item>
+                                        <Nav.Link href="/" className="text-color px-3" onClick={this.LogoutMe}>{this.state.isAuth}</Nav.Link>
+                                </Nav.Item></>)
                                     }
                             </Nav>
                         </Navbar>
