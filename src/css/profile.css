@@ -264,3 +264,9 @@
 img {
     cursor: pointer;
 }
+#pupload {
+    z-index: -1;
+}
+.upload-btn-wrapper ul {
+    padding-left: 0;
+}

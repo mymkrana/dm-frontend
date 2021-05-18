@@ -12,9 +12,15 @@
     background-size: cover;
 }
 .contact-page .form-control {
-    background-color: #F2F3F3 !important;
+    background-color: #edeeee !important;
     font-family: Arial, Helvetica, sans-serif !important;
     border-radius: 5px;
+}
+.contact-page .form-label {
+    margin-bottom: 0;
+} 
+.contact-page .form-group {
+    margin-bottom: 0.5rem;
 }
 .co-btn {
     border-radius: 40px !important;
@@ -24,9 +30,7 @@
     padding-top: 80px;
     padding-bottom: 80px;
 }
-.cinfo {
-    padding-bottom: 120px;
-}
+
 .contact-page .form-control:focus {
     box-shadow: none;
     border: 1px solid black
@@ -39,3 +43,9 @@ input[type="email"]
         line-height: 1.5 !important;
         border-radius: .2rem !important;
     }
+.cpadding2 {
+    margin-top: 80px;
+    margin-bottom: 130px;
+    background-color: #edeeee;
+    border-radius: 15px;
+}

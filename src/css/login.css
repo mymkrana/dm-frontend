@@ -217,8 +217,8 @@ span.flow {
 }
 
 .logsection input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #bd572893;
-    opacity: 1; /* Firefox */
+    color: #AF4125;
+    opacity: 0.3;
   }
 
 #exampleInputEmail1, #exampleInputPassword1 {
@@ -228,7 +228,8 @@ span.flow {
     /* border: none; */
 }
 .logsection input::placeholder {
-    color: #bd572893 !important;
+    color: #AF4125;
+    opacity: 0.3;
   }
   .logsection .form-control:focus {
     color: #212529;
@@ -371,4 +372,7 @@ input[type="email"], input[type="text"], input[type="password"] {
     .sectionwel {
       font-size: 32px !important;
   }
+  }
+  .logsection #exampleInputEmail1 {
+      border-radius: 0 !important;
   }

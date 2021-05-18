@@ -16,10 +16,24 @@ import { createProfile } from '../services/createProfile'
 import { getPortfolioByUser } from '../services/getPortfolioByUser';
 import { selectAvatar } from '../services/selectAvatar';
 import { Logout } from '../services/Logout';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import arrayMove from 'array-move';
+const SortableItem = SortableElement(({ value }) => <img src={URL.createObjectURL(value)} alt="slected" height="100px" width="auto" className="pr-2" />);
+
+const SortableList = SortableContainer(({ items }) => {
+    return (
+        <ul>
+            {items.map((value, index) => (
+                <SortableItem key={`item-${value}`} index={index} value={value} />
+            ))}
+        </ul>
+    );
+});
+
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none", phide: "block" };
+        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none", phide: "block", fbtn: false };
     }
     submitBasicProfile = async (e) => {
         e.preventDefault()
@@ -84,7 +98,7 @@ class CreateProfile extends React.Component {
         await this.setState({ isAuthenticated: auth })
         getProfile().then(async (res) => {
             var profile = { ...res.data }
-            if(profile.date_of_birth) {
+            if (profile.date_of_birth) {
                 profile.date_of_birth = profile.date_of_birth.split("T")[0]
             }
             if (profile.first_name) {
@@ -104,26 +118,26 @@ class CreateProfile extends React.Component {
                 var isoCode = country[0].isoCode
                 var states = await csc.getStatesOfCountry(isoCode)
                 await this.setState({ states: states })
-                if(profile.categories !== "Other") {
+                if (profile.categories !== "Other") {
                     getCategories()
-                    .then(async (res) => {
-                        await this.setState({ categories: res })
-                        var catArr = []
-                        for (let cat in res) {
-                            catArr.push(cat)
-                        }
-                        this.setState({ catArr: catArr })
-                        var SubCat = []
-                        var scat = this.state.djourney.categories.split(",")
-                        scat.map((cat) => {
-                            this.state.categories[cat].map((subcat) => {
-                                SubCat.push(subcat)
-                                return subcat
+                        .then(async (res) => {
+                            await this.setState({ categories: res })
+                            var catArr = []
+                            for (let cat in res) {
+                                catArr.push(cat)
+                            }
+                            this.setState({ catArr: catArr })
+                            var SubCat = []
+                            var scat = this.state.djourney.categories.split(",")
+                            scat.map((cat) => {
+                                this.state.categories[cat].map((subcat) => {
+                                    SubCat.push(subcat)
+                                    return subcat
+                                })
+                                return cat
                             })
-                            return cat
+                            await this.setState({ SubCat: SubCat })
                         })
-                        await this.setState({ SubCat: SubCat })
-                    })
                 }
             }
         }).catch((err) => {
@@ -134,7 +148,7 @@ class CreateProfile extends React.Component {
         await this.setState({ avatars: cavatars })
         var countries = csc.getAllCountries()
         await this.setState({ countries: countries })
-        
+
         getCategories()
             .then(async (res) => {
                 await this.setState({ categories: res })
@@ -145,13 +159,18 @@ class CreateProfile extends React.Component {
                 this.setState({ catArr: catArr })
             })
         getPortfolioByUser().then(async (res) => {
-            if(res.data[0].title) {
+            if (res.data[0].title) {
                 await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
             }
         }).catch(err => {
             // this.setState({isAuthenticated: false})
         })
     }
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.setState(({ media }) => ({
+            media: arrayMove(media, oldIndex, newIndex),
+        }));
+    };
     addPortfolio = () => {
         if (this.state.isportfolio === "none") {
             this.setState({ isportfolio: "block", pdisplay: "none" })
@@ -162,7 +181,7 @@ class CreateProfile extends React.Component {
 
     }
     clearMessage = () => {
-        this.setState({cloading: "", bloading:"", pmsg: ""})
+        this.setState({ cloading: "", bloading: "", pmsg: "" })
     }
     handleInput = async (e) => {
         var basicInfo = { ...this.state.basicInfo }
@@ -180,22 +199,22 @@ class CreateProfile extends React.Component {
         await this.setState({ djourney: djourney })
     }
     selectAvatar = (e) => {
-        this.setState({fileError: "Please wait..."})
-        if(this.state.basicInfo.first_name) {
+        this.setState({ fileError: "Please wait..." })
+        if (this.state.basicInfo.first_name) {
             var user = {
                 photo_url: e.target.getAttribute("src")
             }
             selectAvatar(user)
-            .then((res) => {
-                this.setState({fileError: "Profile updated"})
-                this.setState({profileImg: e.target.getAttribute("src"), isAvatar: true})
-                this.handleClose()
-            }).catch((err) => {
-                this.setState({fileError: "something went wrong"})
-            })
+                .then((res) => {
+                    this.setState({ fileError: "Profile updated" })
+                    this.setState({ profileImg: e.target.getAttribute("src"), isAvatar: true })
+                    this.handleClose()
+                }).catch((err) => {
+                    this.setState({ fileError: "something went wrong" })
+                })
         }
         else {
-            this.setState({fileError: "submit basic information first"})
+            this.setState({ fileError: "submit basic information first" })
         }
     }
     submitPortfolio = (e) => {
@@ -206,11 +225,11 @@ class CreateProfile extends React.Component {
             media: this.state.media
         }
         uploadPortfolio(data).then(res => {
-            this.setState({ pmsg: "portfolio uploaded successfully", portfolio: {}, media: []  })
+            this.setState({ pmsg: "portfolio uploaded successfully", portfolio: {}, media: [] })
             getPortfolioByUser().then(async (res) => {
                 await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block" })
             }).catch(err => {
-                this.setState({isAuthenticated: false})
+                this.setState({ isAuthenticated: false })
             })
         })
             .catch((err) => {
@@ -229,32 +248,38 @@ class CreateProfile extends React.Component {
 
         }
     }
-    selectFile = (e) => {
-        var fileExt = e.target.files[0].name.split(".")
-        if ((fileExt[fileExt.length - 1].toLowerCase() === "png") || (fileExt[fileExt.length - 1].toLowerCase() === "jpeg") || (fileExt[fileExt.length - 1].toLowerCase() === "jpg")) {
-            this.setState({ fileName: "Uploading please wait..." })
-            uploadAvatar(e.target.files[0]).then((res) => {
-                getProfile()
-                    .then(async (res) => {
-                        await this.setState({ profileImg: res.data.photo_url, isAvatar: true })
-                        this.handleClose()
-                    })
-                    .catch((err) => {
-                        this.setState({ fileName: "create profile first" })
-                    })
+    selectFile = async (e) => {
+        if (e.target.files.length !== 0) {
+            await this.setState({ fbtn: true })
+            var fileExt = e.target.files[0].name.split(".")
+            if ((fileExt[fileExt.length - 1].toLowerCase() === "png") || (fileExt[fileExt.length - 1].toLowerCase() === "jpeg") || (fileExt[fileExt.length - 1].toLowerCase() === "jpg")) {
 
-            })
-                .catch((err) => {
-                    if (err.response.data.detail === "Invalid session: Illegal session cookie provided: None. session cookie must be a non-empty string.") {
-                        this.setState({ fileName: "Session Expired Please Login" })
-                        setTimeout(() => {
-                            this.setState({ isAuthenticated: false })
-                        }, 2000)
-                    }
+                uploadAvatar(e.target.files[0], async (pr) => {
+                    console.log(pr)
+                    this.setState({ fileName: `Uploading please wait - ${pr}%` })
+                }).then((res) => {
+                    getProfile()
+                        .then(async (res) => {
+                            await this.setState({ profileImg: res.data.photo_url, isAvatar: true })
+                            this.handleClose()
+                        })
+                        .catch((err) => {
+                            this.setState({ fileName: "create profile first" })
+                        })
+
                 })
-        }
-        else {
-            this.setState({ fileName: "select .png or .jpg file" })
+                    .catch((err) => {
+                        if (err.response.data.detail === "Invalid session: Illegal session cookie provided: None. session cookie must be a non-empty string.") {
+                            this.setState({ fileName: "Session Expired Please Login" })
+                            setTimeout(() => {
+                                this.setState({ isAuthenticated: false })
+                            }, 2000)
+                        }
+                    })
+            }
+            else {
+                this.setState({ fileName: "select .png or .jpg file" })
+            }
         }
     }
     selectPFile = async (e) => {
@@ -276,7 +301,8 @@ class CreateProfile extends React.Component {
         }
     }
     handleShow = () => {
-        if(this.state.basicInfo.first_name) {
+        this.setState({ fileName: "", fbtn: false })
+        if (this.state.basicInfo.first_name) {
             this.setState({ show: true })
         }
     }
@@ -289,7 +315,7 @@ class CreateProfile extends React.Component {
             description: e.target.getAttribute("data-desc"),
             media: e.target.getAttribute("media").split(",")
         }
-        await this.setState({ pshow: true, vportfolio: vportfolio})
+        await this.setState({ pshow: true, vportfolio: vportfolio })
     }
     phandleClose = () => {
         this.setState({ pshow: false })
@@ -360,15 +386,14 @@ class CreateProfile extends React.Component {
     LogoutMe = (e) => {
         e.preventDefault()
         Logout()
-        .then((res) => {
-            this.setState({isAuthenticated: false})
-        })
-        .catch((err) => {
-            this.setState({isAuthenticated: false})
-        })
+            .then((res) => {
+                this.setState({ isAuthenticated: false })
+            })
+            .catch((err) => {
+                this.setState({ isAuthenticated: false })
+            })
     }
     render() {
-        console.log("is", this.state.isAuthenticated)
         if (this.state.isAuthenticated === false) {
             return <Redirect
                 to={{
@@ -384,9 +409,9 @@ class CreateProfile extends React.Component {
         if (this.state.basicInfo.profile_name) {
             username = this.state.basicInfo.profile_name;
         }
-        if(Cookies.get("username")) {
+        if (Cookies.get("username")) {
             username = Cookies.get("username");
-        } 
+        }
         return (
             <div className="cprofile">
                 <div className="container-fluid cmain p-0">
@@ -440,15 +465,15 @@ class CreateProfile extends React.Component {
                                         <div className="default-av">
                                             {
                                                 this.state.avatars.map((avatar) => {
-                                                    return <img src={avatar} className="rounded-circle float-left mr-3" alt="avatar" width="80px" onClick={this.selectAvatar}/>
+                                                    return <img src={avatar} className="rounded-circle float-left mr-3" alt="avatar" width="80px" onClick={this.selectAvatar} />
                                                 })
                                             }
                                         </div>
                                         <h3 class="text-center mt-4">Upload your own</h3>
                                         <div className="d-flex justify-content-center text-center">
                                             <div class="upload-btn-wrapper">
-                                                <label class="btn my-btn ubtn text-color font-roboto" htmlFor="cupload">Upload a file</label>
-                                                <input type="file" name="myfile" id="cupload" onChange={this.selectFile} />
+                                                <label class="btn my-btn ubtn text-color font-roboto" htmlFor="cupload" >Upload a file</label>
+                                                <input type="file" name="myfile" id="cupload" onChange={this.selectFile} disabled={this.state.fbtn} />
                                                 <p className="text-center font-roboto">{this.state.fileName}</p>
                                                 <p className="text-center">{this.state.fileError}</p>
                                             </div>
@@ -470,20 +495,12 @@ class CreateProfile extends React.Component {
                                             <Form onSubmit={this.submitBasicProfile}>
                                                 <Row>
                                                     <Col sm={6}>
-                                                        <Row className="m-0">
-                                                            <Col sm={6} className="pl-0">
-                                                                <Form.Label>First Name</Form.Label>
-                                                                <Form.Control name="first_name" placeholder="John" value={this.state.basicInfo ? this.state.basicInfo.first_name : ''} onChange={this.handleInput} required />
-                                                            </Col>
-                                                            <Col sm={6} className="pr-0">
-                                                                <Form.Label>Last Name</Form.Label>
-                                                                <Form.Control name="last_name" placeholder="Doe" value={this.state.basicInfo ? this.state.basicInfo.last_name : ''} onChange={this.handleInput} required />
-                                                            </Col>
-                                                        </Row>
+                                                        <Form.Label>First Name</Form.Label>
+                                                        <Form.Control name="first_name" placeholder="John" value={this.state.basicInfo ? this.state.basicInfo.first_name : ''} onChange={this.handleInput} required />
                                                     </Col>
                                                     <Col sm={6}>
-                                                        <Form.Label>Email</Form.Label>
-                                                        <Form.Control name="email" value={this.state.basicInfo ? this.state.basicInfo.email : ''} placeholder="johndoe@gmail.com" />
+                                                        <Form.Label>Last Name</Form.Label>
+                                                        <Form.Control name="last_name" placeholder="Doe" value={this.state.basicInfo ? this.state.basicInfo.last_name : ''} onChange={this.handleInput} required />
                                                     </Col>
                                                 </Row>
                                                 <Row>
@@ -557,13 +574,13 @@ class CreateProfile extends React.Component {
                                     <h3 className="weight-600">{`${username} / Design Journey`}</h3>
                                     <div className="form-2">
                                         <Form>
-                                            <Row>
+                                            {/* <Row>
                                                 <Col>
                                                     <Form.Label>Add username</Form.Label>
                                                     <Form.Control name="profile_name" onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.profile_name : ''} />
                                                     <span>This is the second thing that others would see after your avatar. So please make sure it is catchy enough for others to remember eg.  Logoninja, Artistik, Quickart, etc..  Please avoid using your name here. </span>
                                                 </Col>
-                                            </Row>
+                                            </Row> */}
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Add your profile description</Form.Label>
@@ -660,7 +677,7 @@ class CreateProfile extends React.Component {
                                     <h3 className="weight-600">Designguru / My Work</h3>
                                     <p></p>
                                     <button className="mt-3 btn my-btn cbtn text-color float-right mb-2" style={{ display: this.state.addbtn }} onClick={this.addPortfolio}>Add Portfolio</button>
-                                    <div className="myportfolios mb-2" style={{display: this.state.pdisplay}}>
+                                    <div className="myportfolios mb-2" style={{ display: this.state.pdisplay }}>
                                         {
                                             this.state.portfolios.map((portfolio) => {
                                                 return (
@@ -695,17 +712,18 @@ class CreateProfile extends React.Component {
                                                     <div class="upload-btn-wrapper">
                                                         <p>you can upload max 5 images</p>
                                                         <div>
-                                                            {
-                                                                this.state.media.map((file) => {
-                                                                    return <img className="p-2" src={URL.createObjectURL(file)} alt={file.name} key={file.name} height="80px" width="auto" />
-                                                                })
-                                                            }
+                                                            <SortableList items={this.state.media} onSortEnd={this.onSortEnd} axis="x" />
+                                                            {/* {
+                                                                // this.state.media.map((file) => {
+                                                                //     return <img className="p-2" src={URL.createObjectURL(file)} alt={file.name} key={file.name} height="80px" width="auto" />
+                                                                // })
+                                                            } */}
                                                         </div>
                                                         <label class="mt-2 p-2 btn my-btn cbtn text-color font-roboto" htmlFor="pupload">choose image</label>
                                                         <input type="file" name="myfile" id="pupload" onChange={this.selectPFile} multiple required />
                                                     </div>
-                                                    <p className="text-center font-roboto">{this.state.pfileName}</p>
-                                                    <p className="text-center">{this.state.pfileError}</p>
+                                                    <p className="font-roboto">{this.state.pfileName}</p>
+                                                    <p className="font-arial">{this.state.pfileError}</p>
                                                 </Col>
                                             </Row>
                                             <Row>
@@ -723,17 +741,17 @@ class CreateProfile extends React.Component {
                                         <Modal.Title className="cmtitle w-100 font-roboto">Portfolio</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body>
-                                    <Form onSubmit={this.submitPortfolio}>
+                                        <Form onSubmit={this.submitPortfolio}>
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Portfolio Title</Form.Label>
-                                                    <Form.Control name="title" value={this.state.vportfolio ? this.state.vportfolio.title : ''} onChange={this.portfolioInput} required readOnly/>
+                                                    <Form.Control name="title" value={this.state.vportfolio ? this.state.vportfolio.title : ''} onChange={this.portfolioInput} required readOnly />
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
                                                     <Form.Label>Portfolio Description</Form.Label>
-                                                    <Form.Control as="textarea" rows={5} name="description" value={this.state.vportfolio ? this.state.vportfolio.description : ''} onChange={this.portfolioInput} required readOnly/>
+                                                    <Form.Control as="textarea" rows={5} name="description" value={this.state.vportfolio ? this.state.vportfolio.description : ''} onChange={this.portfolioInput} required readOnly />
                                                 </Col>
                                             </Row>
                                             <Row className='mt-3'>
@@ -770,10 +788,10 @@ class CreateProfile extends React.Component {
                                     <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
                                 </div>
                                 <div id="vprofile" className="container tab-pane fade"><br />
-                                <h3 className="weight-600">Schedue a meeting</h3>
-                                <p>Schedule a meetine with us to get yourself verified on Designmocha.</p>
-                                <span></span>
-                                <div className='calendly-inline-widget' data-url='https://calendly.com/designmocha?text_color=737981&amp;primary_color=ff8c00' style={{width: 100 + "%", height: 67 + "vh"}}></div>
+                                    <h3 className="weight-600">Schedue a meeting</h3>
+                                    <p>Schedule a meetine with us to get yourself verified on Designmocha.</p>
+                                    <span></span>
+                                    <div className='calendly-inline-widget' data-url='https://calendly.com/designmocha?text_color=737981&amp;primary_color=ff8c00' style={{ width: 100 + "%", height: 67 + "vh" }}></div>
                                 </div>
                                 <div id="bpayment" className="container tab-pane fade"><br />
                                     <h3>Menu 2</h3>

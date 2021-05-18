@@ -167,3 +167,12 @@
     height: 120px;
     object-fit: cover; 
 }
+.about .card img {
+    height: 400px;
+    width: auto;
+    object-fit: cover;
+    border-radius: 20px;
+}
+.top-banner.abanner h3 {
+    padding: 140px 0;
+}

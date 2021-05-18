@@ -8,6 +8,7 @@ $(document).ready(function () {
       x.style.display = "block";
     }
   })
+  +
   $(".my-btn").click(function () {
     $('.body').animate({
       scrollTop: (0, 0)

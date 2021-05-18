@@ -256,10 +256,8 @@ span.flow {
 }
 
 .rsection input::placeholder {
-    /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #bd572893;
-    opacity: 1;
-    /* Firefox */
+    color: #AF4125;
+    opacity: 0.3;
 }
 
 #exampleInputEmail1, #exampleInputPassword1 {
@@ -270,7 +268,8 @@ span.flow {
 }
 
 .rsection input::placeholder {
-    color: #bd572893 !important;
+    color: #AF4125;
+    opacity: 0.3;
 }
 
 .rsection .form-control:focus {
@@ -477,4 +476,7 @@ element.style {
     .sectionwel {
         font-size: 32px !important;
     }
+}
+.rsection #exampleInputEmail1 {
+    border-radius: 0 !important;
 }

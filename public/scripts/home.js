@@ -1,3 +1,4 @@
+$(".pace-progress-inner").html("Hello")
 var originalBG = $(".sabsolute").css("background");
 
 $('.sabsolute').mousemove(function(e) {

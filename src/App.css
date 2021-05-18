@@ -856,7 +856,7 @@ footer .nav-link {
   padding: 8px 15px !important;
 }
 .sabsolute {
-  background: rgba(0, 0, 0, 0.7) !important;
+  background: rgba(0, 0, 0, 0.8) !important;
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -882,7 +882,7 @@ footer .nav-link {
 .App #stickytop {
   height: auto;
 }
-.terms, .about{
+.terms{
   background-color: #DFD8CF;
 }
 /* .fixed-top #site-header{
@@ -1011,4 +1011,7 @@ div.ball{
   font-size: 20px;
   margin-top: -4px;
   color: #878787 !important;
+}
+.top-banner h3{
+  font-weight: 700;
 }

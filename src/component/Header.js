@@ -71,7 +71,7 @@ class Header extends React.Component {
                                 <LinkContainer to="/about-us">
                                     <Nav.Link className="text-color px-3">About Us</Nav.Link>
                                 </LinkContainer>
-                                <LinkContainer to="/">
+                                <LinkContainer to="/contact-us">
                                     <Nav.Link className="text-color px-3">Say Hello</Nav.Link>
                                 </LinkContainer>
                                     {
