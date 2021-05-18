@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import {  Redirect } from 'react-router-dom';
 import siteLogo from '../images/logo-dark.png'
 import toggleMenu from '../images/menu.png'
 import { Nav, Navbar } from 'react-bootstrap'
@@ -47,11 +47,11 @@ class Header extends React.Component {
         return (
             <header className="sticky-top" id="stickytop">
                 <div id="site-header">
-                    <Link to="/">
+                    <a href="/">
                         <div className="site-logo">
                             <img src={siteLogo} alt="logo" />
                         </div>
-                    </Link>
+                    </a>
                     <div className='nav-toggle' onClick={this.menuToggle}>
                         <img src={toggleMenu} alt="nav-menu" />
                     </div>
