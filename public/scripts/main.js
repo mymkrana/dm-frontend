@@ -47,12 +47,12 @@ dc.addEventListener('scroll', function() {
     } 
 });
 
-paceOptions = {
-  ajax: false, // disabled
-  document: false, // disabled
-  eventLag: true, // disabled
-  elements: false
-};
+// paceOptions = {
+//   ajax: false, // disabled
+//   document: false, // disabled
+//   eventLag: true, // disabled
+//   elements: false
+// };
 // document.addEventListener("DOMContentLoaded", function(){
 //   var menu = document.getElementsByClassName("nav-toggle")[0];
 //   var slide = document.getElementsByClassName("slide-menu")[0]

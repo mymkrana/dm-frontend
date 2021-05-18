@@ -3,7 +3,7 @@ import {  Redirect } from 'react-router-dom';
 import siteLogo from '../images/logo-dark.png'
 import toggleMenu from '../images/menu.png'
 import { Nav, Navbar } from 'react-bootstrap'
-// import { LinkContainer } from 'react-router-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
 import { getAuth } from '../services/getAuth';
 import { Logout } from '../services/Logout';
 class Header extends React.Component {
