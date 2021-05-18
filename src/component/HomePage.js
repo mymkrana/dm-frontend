@@ -14,18 +14,19 @@ class HomePage extends React.Component {
     }
     componentDidMount() {
         getAuth()
+        var page = document.getElementById("page")
         const script = document.createElement("script");
         script.src = "/scripts/home.js";
-        script.async = false;
-        document.body.appendChild(script);
+        script.async = true;
+        page.insertBefore(script, page.childNodes[0])
         const mscript = document.createElement("script");
         mscript.src = "/scripts/main.js";
-        mscript.async = false;
-        document.body.appendChild(mscript);
+        mscript.async = true;
+        page.insertBefore(mscript, page.childNodes[0])
         const pscript = document.createElement("script");
         pscript.src = "/scripts/pace.min.js";
-        pscript.async = false;
-        document.body.appendChild(pscript);
+        pscript.async = true;
+        page.insertBefore(pscript, page.childNodes[0])
     }
     render() {
         return (
