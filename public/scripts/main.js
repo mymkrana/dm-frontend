@@ -1,5 +1,6 @@
 
 $(document).ready(function () {
+  if(document.getElementById("ctoggle")!==null) {
   document.getElementById("ctoggle").addEventListener('click', () => {
     var x = document.getElementById("ptabs");
     if (x.style.display === "block") {
@@ -7,8 +8,7 @@ $(document).ready(function () {
     } else {
       x.style.display = "block";
     }
-  })
-  +
+  })}
   $(".my-btn").click(function () {
     $('.body').animate({
       scrollTop: (0, 0)
@@ -46,7 +46,9 @@ dc.addEventListener('scroll', function() {
       document.body.style.paddingTop = '0';
     } 
 });
-
+if(window.location.pathname !== "/") {
+  document.getElementsByClassName("pace")[0].style.display = "none !important"
+}
 // paceOptions = {
 //   ajax: false, // disabled
 //   document: false, // disabled

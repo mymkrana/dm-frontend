@@ -12,26 +12,34 @@ import { getAuth } from '../services/getAuth';
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { loading: true };
+        this.state = { loading: true, refresh: true };
     }
     componentDidMount() {
         // axios.get("/slider-video.mp4").then(() => {
         //     this.setState({loading: false})
         // })
-        getAuth()
-        var page = document.getElementById("page")
+        getAuth();
+        var page = document.getElementsByClassName("main-section")[0];
         const script = document.createElement("script");
+        script.id = "hscript";
         script.src = "/scripts/home.js";
         script.async = true;
         page.insertBefore(script, page.childNodes[0])
         const mscript = document.createElement("script");
         mscript.src = "/scripts/main.js";
+        mscript.id = "mscript";
         mscript.async = true;
         page.insertBefore(mscript, page.childNodes[0])
         const pscript = document.createElement("script");
         pscript.src = "/scripts/pace.min.js";
+        pscript.id = "pscript";
         pscript.async = true;
         page.insertBefore(pscript, page.childNodes[0])
+    }
+    componentWillUnmount() {
+        document.getElementById("pscript").remove()
+        document.getElementById("mscript").remove()
+        document.getElementById("hscript").remove()
     }
     videoPlay = () => {
         this.setState({ loading: false })
@@ -52,8 +60,8 @@ class HomePage extends React.Component {
                                 <source src={SliderVideo} type="video/mp4" />
                             </video>
                             <div className="sabsolute">
-                                <div class="ball"></div>
-                                {/* <div id="div1" class="cursor"></div> */}
+                                <div className="ball"></div>
+                                {/* <div id="div1" className="cursor"></div> */}
                                 <div className="container">
                                     <div className="slide-header">
                                         <h3 className="text-color text-center">Our vision is to be India`s biggest design crowdsourcing platform..</h3>

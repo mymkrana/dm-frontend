@@ -31,14 +31,12 @@ class Login extends React.Component {
         }
         LoginMe(data).then((res) => {
             if (res.status === 200) {
-                console.log(res.data.token)
                 const headers = {
                     'Content-Type': 'application/json',
                     'Authorization':"Bearer " + res.data.token
                   }
                 getSession(headers)
                 .then(async (response) => {
-                    console.log(response.data)
                     const {cookies} = this.props
                     cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none"})
                     // cookies.set("authenticated", response.data.authenticated, { maxAge: 3600 })
@@ -51,7 +49,6 @@ class Login extends React.Component {
                     await this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
                 })
                 .catch((err) => {
-                    console.log(err)
                     this.setState({ successMessage: "Something went wrong", isloading: false})
                 })
             }
@@ -71,7 +68,6 @@ class Login extends React.Component {
     }
     render() {
         if(this.state.Redirect==="false") {
-            console.log(this.state.Redirect)
             if(this.state.isloggedin===true) {
                 return <Redirect to='/explore' />
             }

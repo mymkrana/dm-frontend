@@ -571,7 +571,7 @@ footer .nav-link {
     min-height: 700px !important;
   }
   .parallax::after {
-    transform: translateZ(-0.7px) scale(1.6);
+    transform: translateZ(-0.6px) scale(1.6);
   }
 }
 @media only screen and (max-width: 1024px) {
@@ -586,6 +586,15 @@ footer .nav-link {
   }
 }
 @media only screen and (max-width: 768px) {
+  #mwork button {
+    width: 100% !important;
+  }
+  #mwork .upload-btn-wrapper {
+    width: 100%;
+  }
+  #mwork label[for="pupload"] {
+    width: 100% !important;
+  }
   .nav-close {
     display: block;
     padding-top: 10px;
@@ -982,7 +991,7 @@ background-color: transparent !important;
 
 
 div.ball{
-  background: radial-gradient(circle, rgb(255,255,255, 0.11), rgb(255,255,255, 0.09), rgb(255,255,255, 0.08), transparent 320px);
+  background: radial-gradient(circle, rgb(255,255,255, 0.13), rgb(255,255,255, 0.10), rgb(255,255,255, 0.10), transparent 320px);
   width: 800px;
   height: 800px;
   border-radius: 50%;
@@ -991,7 +1000,7 @@ div.ball{
   top: 0;
   left: 0;
   transform: translate(-50%, -50%);
-  filter: brightness(1.2);
+  filter: brightness(1.5);
 }
 .ball:after {
   content: "";
@@ -1029,4 +1038,14 @@ div.ball{
 }
 .preloader span span{
   background-color: #EAE1CB !important;
+}
+.form-control.is-valid, .was-validated .form-control:valid {
+  border-color: inherit !important;
+  background-image: none !important;
+}
+.form-control.is-valid:focus, .was-validated .form-control:valid:focus {
+  box-shadow: none !important;
+}
+.form-control.is-invalid:focus, .was-validated .form-control:invalid:focus {
+  box-shadow: none !important;
 }

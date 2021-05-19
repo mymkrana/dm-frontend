@@ -28,7 +28,6 @@ class Register extends React.Component {
     }
     handleChange = async (e) => {
         await this.setState({ [e.target.name]: e.target.value })
-        console.log("current data", this.state)
         this.setState({ successMessage: "" })
     }
     formSubmit = (e) => {
@@ -49,7 +48,6 @@ class Register extends React.Component {
                 confirmPassword: this.state.password
             }
             RegisterMe(data).then(async (res) => {
-                console.log("sucess", res)
                 this.setState({ isloading: false })
                 if (res.status === 201) {
                     await Cookies.remove("session")

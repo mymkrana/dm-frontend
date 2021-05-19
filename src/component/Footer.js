@@ -40,7 +40,7 @@ class Footer extends React.Component {
                                 </Nav>
                             </div>
                         </div>
-                        <center><hr class="line" />
+                        <center><hr className="line" />
                             <h5>Designmocha LLP © All rights reserved 2021</h5>
                         </center>
                     </div>

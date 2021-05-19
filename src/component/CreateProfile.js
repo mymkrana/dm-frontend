@@ -33,51 +33,65 @@ const SortableList = SortableContainer(({ items }) => {
 class CreateProfile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none", phide: "block", fbtn: false, prbtn:false };
+        this.state = { pshow: false, show: false, catArr: [], Scat: [], SubCat: [], SubSelected: [], countries: [], states: [], avatars: [], fileName: '', fileError: '', profileImg: '', isAvatar: false, basicInfo: {}, djourney: { categories: '', sub_category: '' }, isAuthenticated: true, profile: {}, bloading: '', cloading: '', btn1: "Submit", btn2: "Submit", media: [], pmsg: '', portfolios: [{ title: " ", media_urls: [""], description: "" }], isportfolio: "block", addbtn: "none", pdisplay: "none", phide: "block", fbtn: false, prbtn: false, validated: false, bvalidated: false, cvalidated: false };
     }
     submitBasicProfile = async (e) => {
-        e.preventDefault()
-        this.setState({ bloading: "Loading please wait..." })
-        var basicInfo = { ...this.state.basicInfo }
-        basicInfo.full_name = basicInfo.first_name + " " + basicInfo.last_name
-        await this.setState({ basicInfo: basicInfo })
-        var basicProfile = { ...this.state.basicInfo }
-        basicProfile = { first_name: basicProfile.first_name, last_name: basicProfile.last_name, email: basicProfile.email, mobile_number: basicProfile.mobile_number, gender: basicProfile.gender, country: basicProfile.country, state: basicProfile.state, city: basicProfile.city, address: basicProfile.address, date_of_birth: basicProfile.date_of_birth, pin_code: basicProfile.pin_code, full_name: basicProfile.full_name }
-        if ((this.state.isProfile === "true") || (this.state.isProfile === true)) {
-            basicProfile.profile_name = '';
-            var d = new Date(basicProfile.date_of_birth)
-            basicProfile.date_of_birth = d.toISOString()
-            updateProfile(basicProfile)
-                .then((res) => {
-                    this.setState({ bloading: "Profile has been updated successfully" })
-                })
-                .catch((err) => {
-                    if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
-                        this.setState({ bloading: "Session Expired Please Login" })
-                        this.setState({ isAuthenticated: false })
-                    }
-                })
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
         }
         else {
-            basicProfile.profile_name = '';
-            d = new Date(basicProfile.date_of_birth)
-            basicProfile.date_of_birth = d.toISOString()
-            createProfile(basicProfile)
-                .then((res) => {
-                    this.setState({ bloading: "Profile has been Created successfully" })
-                    this.setState({ isProfile: true })
-                    Cookies.set("userProfile", true)
-                })
-                .catch((err) => {
-                    if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
-                        this.setState({ bloading: "Session Expired Please Login" })
-                        this.setState({ isAuthenticated: false })
-                    }
-                })
+            e.preventDefault()
+            this.setState({ bloading: "Loading please wait..." })
+            var basicInfo = { ...this.state.basicInfo }
+            basicInfo.full_name = basicInfo.first_name + " " + basicInfo.last_name
+            await this.setState({ basicInfo: basicInfo })
+            var basicProfile = { ...this.state.basicInfo }
+            basicProfile = { first_name: basicProfile.first_name, last_name: basicProfile.last_name, email: basicProfile.email, mobile_number: basicProfile.mobile_number, gender: basicProfile.gender, country: basicProfile.country, state: basicProfile.state, city: basicProfile.city, address: basicProfile.address, date_of_birth: basicProfile.date_of_birth, pin_code: basicProfile.pin_code, full_name: basicProfile.full_name }
+            if ((this.state.isProfile === "true") || (this.state.isProfile === true)) {
+                basicProfile.profile_name = '';
+                var d = new Date(basicProfile.date_of_birth)
+                basicProfile.date_of_birth = d.toISOString()
+                updateProfile(basicProfile)
+                    .then((res) => {
+                        this.setState({ bloading: "Profile has been updated successfully" })
+                    })
+                    .catch((err) => {
+                        if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
+                            this.setState({ bloading: "Session Expired Please Login" })
+                            this.setState({ isAuthenticated: false })
+                        }
+                    })
+            }
+            else {
+                basicProfile.profile_name = '';
+                d = new Date(basicProfile.date_of_birth)
+                basicProfile.date_of_birth = d.toISOString()
+                createProfile(basicProfile)
+                    .then((res) => {
+                        this.setState({ bloading: "Profile has been Created successfully" })
+                        this.setState({ isProfile: true })
+                        Cookies.set("userProfile", true)
+                    })
+                    .catch((err) => {
+                        if (err.response.data.detail === "Illegal session cookie provided: None. session cookie must be a non-empty string.") {
+                            this.setState({ bloading: "Session Expired Please Login" })
+                            this.setState({ isAuthenticated: false })
+                        }
+                    })
+            }
         }
+        this.setState({ validated: true })
     }
     submitDesignJourney = async (e) => {
         e.preventDefault()
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        else {
         this.setState({ cloading: "Loading please wait..." })
         var djourney = { ...this.state.djourney }
         await this.setState({ djourney: djourney })
@@ -91,6 +105,8 @@ class CreateProfile extends React.Component {
                     this.setState({ isAuthenticated: false })
                 }
             })
+        }
+        this.setState({ bvalidated: true })
     }
     async componentDidMount() {
         await this.setState({ isProfile: Cookies.get("userProfile") })
@@ -189,6 +205,7 @@ class CreateProfile extends React.Component {
         await this.setState({ basicInfo: basicInfo })
     }
     portfolioInput = async (e) => {
+        this.setState({prbtn: false})
         var portfolio = { ...this.state.portfolio }
         portfolio[e.target.name] = e.target.value
         await this.setState({ portfolio: portfolio })
@@ -218,25 +235,39 @@ class CreateProfile extends React.Component {
         }
     }
     submitPortfolio = (e) => {
-        this.setState({ pmsg: "Please wait...", prbtn: true })
         e.preventDefault()
-        var data = {
-            portfolio_metadata: JSON.stringify(this.state.portfolio),
-            media: this.state.media
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
+            if(this.state.media.length === 0) {
+                this.setState({pfileName: "please select porfolio images"})
+            }
         }
-        uploadPortfolio(data, (progress) => {
-            this.setState({pfileName: `Uploading Images... - ${progress}%`})
-        }).then(res => {
-            this.setState({ pmsg: "portfolio uploaded successfully", portfolio: {}, media: [], pfileName: ""})
-            getPortfolioByUser().then(async (res) => {
-                await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block", prbtn: false, vportfolio: ""  })
-            }).catch(err => {
-                this.setState({ isAuthenticated: false })
+        else {
+            if(this.state.media.length === 0) {
+                this.setState({pfileName: "please select porfolio images"})
+            }
+            this.setState({ pmsg: "Please wait...", prbtn: true })
+            var data = {
+                portfolio_metadata: JSON.stringify(this.state.portfolio),
+                media: this.state.media
+            }
+            uploadPortfolio(data, (progress) => {
+                this.setState({ pfileName: `Uploading Images... - ${progress}%` })
+            }).then(res => {
+                this.setState({ pmsg: "portfolio uploaded successfully", portfolio: {}, media: [], pfileName: "" })
+                getPortfolioByUser().then(async (res) => {
+                    await this.setState({ portfolios: res.data, isportfolio: "none", addbtn: "block", pdisplay: "block", prbtn: false, vportfolio: "" })
+                }).catch(err => {
+                    this.setState({ isAuthenticated: false })
+                })
             })
-        })
-            .catch((err) => {
-                this.setState({ pmsg: "something went wrong", prbtn: false })
-            })
+                .catch((err) => {
+                    this.setState({ pmsg: "something went wrong", prbtn: false })
+                })
+        }
+        this.setState({cvalidated: true})
     }
     handleOthers = async (e) => {
         if (e.target.checked) {
@@ -257,7 +288,6 @@ class CreateProfile extends React.Component {
             if ((fileExt[fileExt.length - 1].toLowerCase() === "png") || (fileExt[fileExt.length - 1].toLowerCase() === "jpeg") || (fileExt[fileExt.length - 1].toLowerCase() === "jpg")) {
 
                 uploadAvatar(e.target.files[0], async (pr) => {
-                    console.log(pr)
                     this.setState({ fileName: `Uploading please wait - ${pr}%` })
                 }).then((res) => {
                     getProfile()
@@ -486,7 +516,7 @@ class CreateProfile extends React.Component {
                         </div>
                         <div className="col-sm-9 order-sm-1">
                             <div className="clogo">
-                                <Link to='/'><img src={logo} alt="logo" /></Link>
+                                <a href='/'><img src={logo} alt="logo" /></a>
                             </div>
                             <div className="tab-content container">
                                 <div id="pbasic" className="container tab-pane active"><br />
@@ -494,37 +524,42 @@ class CreateProfile extends React.Component {
                                         <h3 className="weight-600">Welcome, {(username !== '') ? username : ''}<br />Let's create your profile..</h3>
                                         <p>Let other get to know you better!</p>
                                         <div className="form-1">
-                                            <Form onSubmit={this.submitBasicProfile}>
+                                            <Form noValidate validated={this.state.validated} onSubmit={this.submitBasicProfile}>
                                                 <Row>
-                                                    <Col sm={6}>
+                                                    <Form.Group as={Col} sm="6" controlId="validationCustom01">
                                                         <Form.Label>First Name</Form.Label>
                                                         <Form.Control name="first_name" placeholder="John" value={this.state.basicInfo ? this.state.basicInfo.first_name : ''} onChange={this.handleInput} required />
-                                                    </Col>
-                                                    <Col sm={6}>
+                                                        <Form.Control.Feedback type="invalid">First Name is required</Form.Control.Feedback>
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} sm="6" controlId="validationCustom02">
                                                         <Form.Label>Last Name</Form.Label>
                                                         <Form.Control name="last_name" placeholder="Doe" value={this.state.basicInfo ? this.state.basicInfo.last_name : ''} onChange={this.handleInput} required />
-                                                    </Col>
+                                                        <Form.Control.Feedback type="invalid">Last Name is required</Form.Control.Feedback>
+                                                    </Form.Group>
                                                 </Row>
                                                 <Row>
-                                                    <Col sm={6}>
+                                                    <Form.Group as={Col} sm="6" controlId="validationCustom03">
                                                         <Form.Label>Phone</Form.Label>
                                                         <Form.Control name="mobile_number" value={this.state.basicInfo ? this.state.basicInfo.mobile_number : ''} placeholder="999 999 9999" onChange={this.handleInput} required />
-                                                    </Col>
-                                                    <Col sm={6}>
+                                                        <Form.Control.Feedback type="invalid">Phone number is required</Form.Control.Feedback>
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} sm="6" controlId="validationCustom04">
                                                         <Form.Label>Gender</Form.Label>
-                                                        <Form.Control name="gender" as="select" defaultValue="select" onChange={this.handleInput} required>
-                                                            <option >Select Gender</option>
+                                                        <Form.Control name="gender" as="select" aria-required="true" id="State" onChange={this.handleInput} required>
+                                                            <option value="">Select Gender</option>
                                                             <option selected={((this.state.basicInfo) && (this.state.basicInfo.gender === "Male")) ? "selected" : false} value="Male">Male</option>
                                                             <option selected={((this.state.basicInfo) && (this.state.basicInfo.gender === "Female")) ? "selected" : false} value="Female">Female</option>
                                                             <option selected={((this.state.basicInfo) && (this.state.basicInfo.gemder === "Others")) ? "selected" : false} value="Others">Others</option>
                                                         </Form.Control>
-                                                    </Col>
+                                                        <Form.Control.Feedback type="invalid">Select your Gender</Form.Control.Feedback>
+                                                    </Form.Group>
                                                 </Row>
                                                 <Row>
-                                                    <Col sm={6}>
+                                                    <Form.Group as={Col} sm="6" controlId="validationCustom03">
                                                         <Form.Label>Date of Birth</Form.Label>
                                                         <Form.Control name="date_of_birth" type="date" value={this.state.basicInfo ? this.state.basicInfo.date_of_birth : ''} placeholder="Date of Birth" onChange={this.handleInput} required />
-                                                    </Col>
+                                                        <Form.Control.Feedback type="invalid">Date of Birth is required</Form.Control.Feedback>
+                                                    </Form.Group>
                                                     <Col sm={6}>
                                                         <Form.Label>Country</Form.Label>
                                                         <Form.Control as="select" name="country" defaultValue={this.state.basicInfo ? this.state.basicInfo.country : "select"} onChange={this.countrySelect}>
@@ -617,7 +652,7 @@ class CreateProfile extends React.Component {
                                 <div id="djourney-2" className="container tab-pane fade"><br />
                                     <h3 className="weight-600">Sahil Mahajan / Design Journey</h3>
                                     <div className="form-2 mt-2">
-                                        <Form onSubmit={this.submitDesignJourney}>
+                                        <Form noValidate validated={this.state.bvalidated} onSubmit={this.submitDesignJourney}>
                                             <h5 className='mt-3 mb-0'>What Categories do you design for</h5>
                                             <span>You can select more than one category also</span>
                                             <Row className='mt-2'>
@@ -657,12 +692,13 @@ class CreateProfile extends React.Component {
                                                 </Col>
                                             </Row>
                                             <Row>
-                                                <Col>
+                                            <Form.Group as={Col} controlId="validationCustom1">
                                                     <Form.Label><b>Portfolio URL</b></Form.Label>
-                                                    <Form.Control name="portfolio_urls" onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.portfolio_urls : ''} />
+                                                    <Form.Control name="portfolio_urls" onChange={this.handleInput2} value={this.state.djourney ? this.state.djourney.portfolio_urls : ''} required/>
                                                     <span>Share your current online presence like Behance, Dribbble, etc.(links separated by ",")</span>
                                                     <br />
-                                                </Col>
+                                                    <Form.Control.Feedback type="invalid">Please add portfolio urls</Form.Control.Feedback>
+                                            </Form.Group>
                                             </Row>
                                             <Row>
                                                 <Col>
@@ -694,23 +730,25 @@ class CreateProfile extends React.Component {
                                     </div>
                                     <p>{this.state.pmsg}</p>
                                     <div className="form-4" style={{ display: this.state.isportfolio }}>
-                                        <Form onSubmit={this.submitPortfolio}>
+                                        <Form noValidate validated={this.state.cvalidated} onSubmit={this.submitPortfolio}>
                                             <Row>
-                                                <Col>
+                                                <Form.Group as={Col} controlId="ValidationCustom1">
                                                     <Form.Label>Write your portfilio title </Form.Label>
                                                     <Form.Control name="title" onChange={this.portfolioInput} required />
                                                     <span>Write your portfilio title </span>
-                                                </Col>
+                                                    <Form.Control.Feedback type="invalid" >Portfolio title is requireds</Form.Control.Feedback>
+                                                </Form.Group>
                                             </Row>
                                             <Row>
-                                                <Col>
+                                            <Form.Group as={Col} controlId="ValidationCustom2">
                                                     <Form.Label>Add your portfolio description</Form.Label>
                                                     <Form.Control as="textarea" rows={5} name="description" onChange={this.portfolioInput} required />
                                                     <span>Write your portfilio description </span>
-                                                </Col>
+                                                    <Form.Control.Feedback type="invalid" >Portfolio description is requireds</Form.Control.Feedback>
+                                                </Form.Group>
                                             </Row>
                                             <Row className='mt-3'>
-                                                <Col>
+                                            <Col>
                                                     <div class="upload-btn-wrapper">
                                                         <p className="font-arial">you can upload max 5 images</p>
                                                         <span className="font-arial">please drag and drop to r-order images</span>

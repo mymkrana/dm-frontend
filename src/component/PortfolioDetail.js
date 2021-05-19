@@ -44,7 +44,6 @@ class PortfolioDetail extends PureComponent {
                     return true
                 })
                 this.setState({ portfolios: portfolios })
-                console.log(this.state.portfolio.portfolio_id)
                 portfolios.map((portfolio) => {
                     if(this.state.portfolio.portfolio_id === portfolio.portfolio_id) {
                         var nportfolio = {...this.state.portfolio}
@@ -55,7 +54,6 @@ class PortfolioDetail extends PureComponent {
                 })
                 getProfileById(this.state.uid).then(async (res) => {
                     await this.setState({user: res.data})
-                    console.log(this.state.user)
                 }).catch((err) => {
                     this.setState({isAthenticated: false})
                 })

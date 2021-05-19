@@ -40,7 +40,6 @@ class Header extends React.Component {
             })
     }
     render() {
-        console.log(this.state.isAuth)
         if ((window.location.pathname === "/explore") && (this.state.isAuth === "Login")) {
             return <Redirect to="/login" />
         }
