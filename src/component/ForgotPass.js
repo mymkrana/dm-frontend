@@ -1,5 +1,5 @@
 import React from 'react';
-// import { Nav } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import '../css/login.css'
 import { Link } from 'react-router-dom'
 import { ResetPass } from '../services/ResetPass';
@@ -8,6 +8,7 @@ class ForgotPass extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            validated: false
         };
     }
     handleChange = async (e) => {
@@ -16,29 +17,37 @@ class ForgotPass extends React.Component {
     }
     formSubmit = async (e) => {
         e.preventDefault();
-        await this.setState({ isloading: true, successMessage: "" })
-        var data = {
-            email: this.state.email
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
         }
-        ResetPass(data).then((res) => {
-            this.setState({ isloading: false })
-            if (res.status === 200) {
-                this.setState({ successMessage: "Check your email for password reset link" })
+        else {
+            await this.setState({ isloading: true, successMessage: "" })
+            var data = {
+                email: this.state.email
             }
-
-        }).catch((err) => {
-            if (err.response) {
-                if (err.response.data.general) {
-                    this.setState({ successMessage: err.response.data.general, isloading: false })
+            ResetPass(data).then((res) => {
+                this.setState({ isloading: false })
+                if (res.status === 200) {
+                    this.setState({ successMessage: "Check your email for password reset link" })
+                }
+    
+            }).catch((err) => {
+                if (err.response) {
+                    if (err.response.data.general) {
+                        this.setState({ successMessage: err.response.data.general, isloading: false })
+                    }
+                    else {
+                        this.setState({ successMessage: "something went wrong", isloading: false })
+                    }
                 }
                 else {
                     this.setState({ successMessage: "something went wrong", isloading: false })
                 }
-            }
-            else {
-                this.setState({ successMessage: "something went wrong", isloading: false })
-            }
-        })
+            })
+        }
+        this.setState({validated: true})
     }
     render() {
         return (
@@ -53,16 +62,17 @@ class ForgotPass extends React.Component {
                             </div>
                             <div class="col-sm-6 form">
                                 <div className="lflex">
-                                    <form onSubmit={this.formSubmit}>
+                                    <Form noValidate validated={this.state.validated} onSubmit={this.formSubmit}>
                                         {!this.state.successMessage ? '' : (<p className="text-color">{this.state.successMessage}</p>)}
                                         {!this.state.isloading ? '' : (<p className="text-color">Loading please wait..</p>)}
-                                        <div class="form-group mb-5">
+                                        <Form.Group controlId="validationCustom01">
                                             <label htmlFor="exampleInputEmail1" class="fotmlab">Email</label>
                                             <input type="email" name='email' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email address" onChange={this.handleChange} required />
-                                        </div>
+                                            <Form.Control.Feedback type="invalid">Email is required</Form.Control.Feedback>
+                                        </Form.Group>
                                         <button type="submit" class="btn form" disabled={this.state.isloading}>Forgot Password</button>
                                         <Link to="/login" class="btn form a">Login</Link>
-                                    </form>
+                                    </Form>
                                     {/* <span class="flow"> or connect with -
                                         <Nav.Link to="/"><i class="cl fa fa-facebook" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link to="/"><i class="cl fa fa-instagram" aria-hidden="true"></i></Nav.Link>

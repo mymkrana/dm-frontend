@@ -13,6 +13,7 @@ class Register extends React.Component {
             show: false,
             accept: false,
             registered: false,
+            validated: false
         };
     }
     handleShow = () => {
@@ -32,47 +33,55 @@ class Register extends React.Component {
     }
     formSubmit = (e) => {
         e.preventDefault();
-        if (this.state.password !== this.state.cpassword) {
-            this.setState({ successMessage: "Password doesn't match" })
-        }
-        else if(this.state.username.split(" ")[1]){
-            this.setState({ successMessage: "Incorrect username" })
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
         }
         else {
-            this.setState({ successMessage: "" })
-            this.setState({ isloading: true })
-            var data = {
-                username: this.state.username,
-                email: this.state.email,
-                password: this.state.password,
-                confirmPassword: this.state.password
+            if (this.state.password !== this.state.cpassword) {
+                this.setState({ successMessage: "Password doesn't match" })
             }
-            RegisterMe(data).then(async (res) => {
-                this.setState({ isloading: false })
-                if (res.status === 201) {
-                    await Cookies.remove("session")
-                    await Cookies.remove("userProfile")
-                    var in60Minutes = 1/24;
-                    Cookies.set("username", this.state.username, {expires: in60Minutes})
-                    this.setState({ successMessage: "Registration Successful", registered: true })
+            else if(this.state.username.split(" ")[1]){
+                this.setState({ successMessage: "Incorrect username" })
+            }
+            else {
+                this.setState({ successMessage: "" })
+                this.setState({ isloading: true })
+                var data = {
+                    username: this.state.username,
+                    email: this.state.email,
+                    password: this.state.password,
+                    confirmPassword: this.state.password
                 }
-            }).catch((err) => {
-                if (err.response) {
-                    if (err.response.data.username) {
-                        this.setState({ successMessage: "This username is already taken", isloading: false })
+                RegisterMe(data).then(async (res) => {
+                    this.setState({ isloading: false })
+                    if (res.status === 201) {
+                        await Cookies.remove("session")
+                        await Cookies.remove("userProfile")
+                        var in60Minutes = 1/24;
+                        Cookies.set("username", this.state.username, {expires: in60Minutes})
+                        this.setState({ successMessage: "Registration Successful", registered: true })
                     }
-                    else if (err.response.data.email) {
-                        this.setState({ successMessage: err.response.data.email, isloading: false })
+                }).catch((err) => {
+                    if (err.response) {
+                        if (err.response.data.username) {
+                            this.setState({ successMessage: "This username is already taken", isloading: false })
+                        }
+                        else if (err.response.data.email) {
+                            this.setState({ successMessage: err.response.data.email, isloading: false })
+                        }
+                        else {
+                            this.setState({ successMessage: "something went wrong", isloading: false })
+                        }
                     }
                     else {
                         this.setState({ successMessage: "something went wrong", isloading: false })
                     }
-                }
-                else {
-                    this.setState({ successMessage: "something went wrong", isloading: false })
-                }
-            })
+                })
+            }
         }
+        this.setState({validated: true})
     }
     render() {
         if (this.state.registered) {
@@ -97,25 +106,29 @@ class Register extends React.Component {
                             </div>
                             <div className="col-sm-6 form">
                                 <div className="rflex">
-                                    <form onSubmit={this.formSubmit}>
+                                    <Form noValidate validated={this.state.validated} onSubmit={this.formSubmit}>
                                         {!this.state.successMessage ? '' : (<p className="text-color">{this.state.successMessage}</p>)}
                                         {!this.state.isloading ? '' : (<p className="text-color">Loading please wait..</p>)}
-                                        <div className="form-group">
+                                        <Form.Group controlId="validationCustom01">
                                             <label for="exampleInputEmail1" className="fotmlab">USERNAME</label>
                                             <input type="text" name="username" className="form-control" id="exampleInputEmail1" aria-describedby="FullName" placeholder="JohnDesigns" required onChange={this.handleChange} />
-                                        </div>
-                                        <div className="form-group">
+                                            <Form.Control.Feedback type="invalid">username is required</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group controlId="validationCustom02">
                                             <label for="exampleInputEmail1" className="fotmlab"> EMAIL ADDRESS</label>
                                             <input type="email" name="email" className="form-control" id="exampleInputEmail1" aria-describedby="Email" placeholder="jdoe123@gmail.com" required onChange={this.handleChange} />
-                                        </div>
-                                        <div className="form-group">
+                                            <Form.Control.Feedback type="invalid">Email is required</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group controlId="validationCustom03">
                                             <label for="exampleInputPassword1" className="fotmlab">PASSWORD</label>
                                             <input type="password" name="password" className="form-control" id="exampleInputPassword1" placeholder="*********" required onChange={this.handleChange} />
-                                        </div>
-                                        <div className="form-group">
+                                            <Form.Control.Feedback type="invalid">Password is required</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group controlId="validationCustom04">
                                             <label for="exampleInputPassword1" className="fotmlab">CONFIRM PASSWORD</label>
                                             <input type="password" name="cpassword" className="form-control" id="exampleInputPassword1" placeholder="*********" required onChange={this.handleChange} />
-                                        </div>
+                                            <Form.Control.Feedback type="invalid">Enter password</Form.Control.Feedback>
+                                        </Form.Group>
                                         <br />
                                         <Form.Check
                                             type="switch"
@@ -128,7 +141,7 @@ class Register extends React.Component {
                                         />
                                         <button type="submit" className="btn form" disabled={this.state.isloading}>SIGN ME UP</button>
                                         <Link to="/login" className="btn form a">I am already a member</Link>
-                                    </form>
+                                    </Form>
                                     {/* <span className="flow"> or connect with -
                                         <Nav.Link href="/"><i className="cl fa fa-facebook" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link href="/"><i className="cl fa fa-instagram" aria-hidden="true"></i></Nav.Link>

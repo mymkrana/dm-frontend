@@ -6,6 +6,7 @@ import { LoginMe } from '../services/LoginMe';
 import { getSession } from '../services/getSession'
 import { instanceOf } from 'prop-types';
 import {withCookies, Cookies } from 'react-cookie';
+import { Form } from 'react-bootstrap';
 // import loader from '../images/loader.gif'
 class Login extends React.Component {
     static propTypes = {
@@ -15,7 +16,8 @@ class Login extends React.Component {
         super(props);
         this.state = {
             isloggedin: false,
-            Redirect: "false"
+            Redirect: "false",
+            validated: false
         };
     }
     handleChange = async (e) => {
@@ -24,47 +26,55 @@ class Login extends React.Component {
     }
     formSubmit = (e) => {
         e.preventDefault();
-        this.setState({ isloading: true, successMessage: "" })
-        var data = {
-            password: this.state.password,
-            email: this.state.email
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
         }
-        LoginMe(data).then((res) => {
-            if (res.status === 200) {
-                const headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization':"Bearer " + res.data.token
-                  }
-                getSession(headers)
-                .then(async (response) => {
-                    const {cookies} = this.props
-                    cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none"})
-                    // cookies.set("authenticated", response.data.authenticated, { maxAge: 3600 })
-                    cookies.set("userProfile", response.data.userProfile, { maxAge: 3600, secure:true, sameSite:"none" })
-                    if(this.props.location.state) {
-                        if(this.props.location.state.redirect) {
-                            await this.setState({Redirect: "true"})
-                        }
-                    }
-                    await this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
-                })
-                .catch((err) => {
-                    this.setState({ successMessage: "Something went wrong", isloading: false})
-                })
+        else {
+            this.setState({ isloading: true, successMessage: "" })
+            var data = {
+                password: this.state.password,
+                email: this.state.email
             }
-        }).catch((err) => {
-            if (err.response) {
-                if (err.response.data.general) {
-                    this.setState({ successMessage: err.response.data.general, isloading: false })
+            LoginMe(data).then((res) => {
+                if (res.status === 200) {
+                    const headers = {
+                        'Content-Type': 'application/json',
+                        'Authorization':"Bearer " + res.data.token
+                      }
+                    getSession(headers)
+                    .then(async (response) => {
+                        const {cookies} = this.props
+                        cookies.set("session", response.data.session, {  maxAge: 3600, secure:true, sameSite:"none"})
+                        // cookies.set("authenticated", response.data.authenticated, { maxAge: 3600 })
+                        cookies.set("userProfile", response.data.userProfile, { maxAge: 3600, secure:true, sameSite:"none" })
+                        if(this.props.location.state) {
+                            if(this.props.location.state.redirect) {
+                                await this.setState({Redirect: "true"})
+                            }
+                        }
+                        await this.setState({ successMessage: "Login Successful", isloggedin: true, isloading: false })
+                    })
+                    .catch((err) => {
+                        this.setState({ successMessage: "Something went wrong", isloading: false})
+                    })
+                }
+            }).catch((err) => {
+                if (err.response) {
+                    if (err.response.data.general) {
+                        this.setState({ successMessage: err.response.data.general, isloading: false })
+                    }
+                    else {
+                        this.setState({ successMessage: "something went wrong", isloading: false })
+                    }
                 }
                 else {
                     this.setState({ successMessage: "something went wrong", isloading: false })
                 }
-            }
-            else {
-                this.setState({ successMessage: "something went wrong", isloading: false })
-            }
-        })
+            })
+        }
+        this.setState({validated: true})
     }
     render() {
         if(this.state.Redirect==="false") {
@@ -87,21 +97,23 @@ class Login extends React.Component {
                             </div>
                             <div className="col-sm-6 form">
                                 <div className="lflex">
-                                    <form onSubmit={this.formSubmit} autoComplete="off">
+                                    <Form noValidate validated={this.state.validated} onSubmit={this.formSubmit} autoComplete="off">
                                         {!this.state.successMessage ? '' : (<p className="text-color">{this.state.successMessage}</p>)}
                                         {!this.state.isloading ? '' : (<p className="text-color">Loading please wait..</p>)}
-                                        <div className="form-group">
+                                        <Form.Group controlId="validationCustom01">
                                             <label htmlFor="exampleInputEmail1" className="fotmlab">EMAIL ADDRESS</label>
                                             <input type="text" autoComplete="off" name='email' className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="jdoe123@gmail.com" onChange={this.handleChange} required />
-                                        </div>
-                                        <div className="form-group">
+                                            <Form.Control.Feedback type="invalid">Email is required</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group controlId="validationCustom02">
                                             <label htmlFor="exampleInputPassword1" className="fotmlab">PASSWORD</label>
                                             <input type="password" autoComplete="new password" name='password' className="form-control" id="exampleInputPassword1" placeholder="*********" onChange={this.handleChange} required />
-                                        </div><br />
+                                            <Form.Control.Feedback type="invalid">please enter password</Form.Control.Feedback>
+                                        </Form.Group><br />
                                         <button type="submit" className="btn form" disabled={this.state.isloading}>Login</button>
                                         <Link to="/register" className="btn form a">If you haven't member </Link>
                                         <Link to='reset-password' className='d-block text-color mt-4'>Forgot password ?</Link>
-                                    </form>
+                                    </Form>
                                     {/* <span className="flow"> or connect with -
                                         <Nav.Link to="/"><i className="cl fa fa-facebook" aria-hidden="true"></i></Nav.Link>
                                         <Nav.Link to="/"><i className="cl fa fa-instagram" aria-hidden="true"></i></Nav.Link>
