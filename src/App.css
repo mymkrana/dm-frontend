@@ -268,13 +268,16 @@ footer p {
 }
 #site-header {
   display: flex;
+  display: -webkit-flex;
   justify-content: space-between;
   align-items: center;
+  -webkit-justify-content: space-between;
+  -webkit-align-items: center;
   position: absolute;
   width: 100%;
   top: 0;
   left: 0;
-  padding: 20px 0;
+  padding: 7px 0;
   z-index: 999;
 }
 .slide-menu {
@@ -291,7 +294,7 @@ footer p {
   float: left;
 }
 .site-logo img {
-  width: 208px;
+  width: 140px;
   margin-left: 40px;
 }
 .nav-toggle {
@@ -616,6 +619,10 @@ footer .nav-link {
     flex-direction: column;
     width: 100%;
 }
+.navbar-expand .navbar-nav .nav-link{
+  padding-left: 30px !important;
+  padding-right: 0.5rem;
+}
   .section-three, .section-three2, .section-five {
     padding-top: 170px;
     padding-bottom: 170px;
@@ -887,6 +894,7 @@ footer .nav-link {
 #stickytop a {
   font-family: Arial, Helvetica, sans-serif;
   color: #878787 !important;
+  font-size: 14px !important;
 }
 .App #stickytop {
   height: auto;
@@ -925,7 +933,7 @@ footer .nav-link {
   background-color: transparent;
 }
 .wrapper .fixed-top #site-header {
-  background-color: #EAE1CB !important;
+  background-color: #ffffff !important;
 }
 .App.wrapper .fixed-top #site-header {
   background-color: transparent !important;
@@ -935,6 +943,7 @@ footer .nav-link {
 }
 .App #site-header a{
   color: #EAE1CB !important;
+  font-size: 14px;
 }
 .footer a:hover {
   color: black !important;
@@ -1012,13 +1021,13 @@ div.ball{
   margin-top: -2500px;
 }
 #stickytop .slide-menu a:hover {
-    font-size: 20px;
-    margin-top: -4px;
+    font-size: 14px;
+    margin-top: 0px;
     color: #BD5828 !important;
 }
 #stickytop.fixed-top .slide-menu a:hover {
-  font-size: 20px;
-  margin-top: -4px;
+  font-size: 14px;
+  margin-top: 0px;
   color: #878787 !important;
 }
 .top-banner h3{
@@ -1051,5 +1060,14 @@ div.ball{
 }
 .cprofile form .form-group, .logsection form .form-group, .rsection form .form-group, .form-group {
   margin-bottom: 1rem !important;
+}
+/* new css */
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem !important;
+  font-size: 14px !important;
+}
+.eoptions {
+  color: #878787 !important;
 }
 
